@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - ./data:/app/data
+      - ./vector_db:/app/vector_db
+    depends_on:
+      - redis
+    networks:
+      - mizan-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - mizan-network
+
+  streamlit:
+    build: .
+    command: streamlit run src/app.py
+    ports:
+      - "8501:8501"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - ./data:/app/data
+      - ./vector_db:/app/vector_db
+    depends_on:
+      - api
+    networks:
+      - mizan-network
+
+networks:
+  mizan-network:
+    driver: bridge

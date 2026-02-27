@@ -12,8 +12,8 @@ import logging
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 
-from core.duckduckgo_search import DuckDuckGoSearch, SearchResult
-from core.search_strategy_agent import get_search_strategy_agent, SearchStrategy
+from src.core.duckduckgo_search import DuckDuckGoSearch, SearchResult
+from src.core.search_strategy_agent import get_search_strategy_agent, SearchStrategy
 
 logger = logging.getLogger(__name__)
 

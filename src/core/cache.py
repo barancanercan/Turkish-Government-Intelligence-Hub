@@ -1,8 +1,8 @@
 from functools import lru_cache
 from typing import Any, Optional, Tuple
 import logging
-import config
-import utils
+from src import config
+from src import utils
 
 logger = logging.getLogger(__name__)
 

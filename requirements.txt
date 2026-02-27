@@ -1,26 +1,32 @@
 # MizanAI - Requirements
 # Baran Can Ercan
-# Last Updated: 18 Şubat 2025 (T-RAG v5.0)
+# Last Updated: 26 Şubat 2026 (T-RAG v5.0 - Fixed)
+
+# ============================================
+# Pydantic (Fixed versions for compatibility)
+# ============================================
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
 
 # ============================================
 # LangChain Core & Ecosystem
 # ============================================
-langchain==0.3.7
-langchain-core==0.3.17
-langchain-community==0.3.7
-langchain-text-splitters==0.3.2
+langchain>=0.3.7
+langchain-core>=0.3.17
+langchain-community>=0.3.7
+langchain-text-splitters>=0.3.2
 
 # LangChain Integrations
-langchain-chroma==0.1.4
-langchain-ollama==0.2.0
-langchain-huggingface==0.1.2
+langchain-chroma>=0.1.4
+langchain-ollama>=0.2.0
+langchain-huggingface>=0.1.2
 langchain-google-genai
 
 # ============================================
 # Vector Database & Embeddings
 # ============================================
-chromadb==0.5.23
-sentence-transformers==3.3.1
+chromadb>=0.5.23
+sentence-transformers>=3.3.1
 
 # ============================================
 # Retrieval (FAZ 2)
@@ -48,13 +54,18 @@ streamlit==1.31.0
 # Web Search (T-RAG)
 # ============================================
 duckduckgo-search>=4.0.0
+wikipedia
 
 # ============================================
 # Optional: Development Tools
-# ============================================
 pytest==7.4.4
 pytest-mock
 black
 ruff
 python-dotenv
+
+# FastAPI Auth
+python-jose[cryptography]
+pyjwt
+
 # langchain-openai (for Cloud - add later)

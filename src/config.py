@@ -190,11 +190,13 @@ LLM_MAX_TOKENS = 1024
 # SOURCE WHITELIST - Güvenilir Kaynak Yönetimi (FAZ 1)
 # ============================================
 
+
 class SourceType:
     """Kaynak türleri."""
-    PARTY_STATUTE = "party_statute"      # Parti tüzükleri
-    PARTY_PROGRAM = "party_program"      # Resmi programlar
-    TBMM_DOCUMENT = "tbmm_document"     # TBMM belgeleri
+
+    PARTY_STATUTE = "party_statute"  # Parti tüzükleri
+    PARTY_PROGRAM = "party_program"  # Resmi programlar
+    TBMM_DOCUMENT = "tbmm_document"  # TBMM belgeleri
     YSK_PUBLICATION = "ysk_publication"  # YSK yayınları
 
 
@@ -203,7 +205,7 @@ class SourceWhitelist:
     Whitelist edilmiş güvenilir kaynaklar.
     Her kaynak: {type, name, url, verified_date, trusted}
     """
-    
+
     SOURCES = {
         # Parti tüzükleri (PDF)
         "CHP": {
@@ -263,19 +265,19 @@ class SourceWhitelist:
             "trusted": True,
         },
     }
-    
+
     @classmethod
     def is_trusted(cls, source_key: str) -> bool:
         """Kaynağın güvenilir olup olmadığını kontrol eder."""
         source = cls.SOURCES.get(source_key)
         return source.get("trusted", False) if source else False
-    
+
     @classmethod
     def get_source_type(cls, source_key: str) -> str:
         """Kaynağın türünü döndürür."""
         source = cls.SOURCES.get(source_key)
         return source.get("type", "unknown") if source else "unknown"
-    
+
     @classmethod
     def get_all_trusted(cls) -> dict:
         """Tüm güvenilir kaynakları döndürür."""
@@ -306,45 +308,24 @@ WEB_SEARCH_TIMEOUT: int = 10
 # ============================================
 # SYSTEM PROMPTS
 # ============================================
+# NOTE: SYSTEM_PROMPTS artik reasoning.py tarafindan yönetiliyor.
+# Chain-of-Thought reasoning, soru tipine gore dinamik promptlar olusturuyor.
 
+SYSTEM_PROMPTS = {
+    party: f"""Sen Turk siyasi partileri hakkinda uzman bir asistansin. Ozellikle {party} partisi hakkinda bilgi sahibisin.
 
-def create_professional_prompts(parties: Dict[str, Path]) -> Dict[str, str]:
-    """
-    Her siyasi parti için özelleştirilmiş profesyonel sistem promptları oluşturur.
+KURALLAR:
+1. SADECE verilen baglam bilgisine dayanarak yanit ver
+2. Baglamda olmayan bilgileri UYDURMA
+3. Kisa, net ve anlasilir Turkce kullan
+4. Emin degilsen "Bu bilgi mevcut belgelerde bulunamiyor" de
 
-    Args:
-        parties: Keşfedilen partilerin sözlüğü.
+BAGLAM: {{context}}
+SORU: {{question}}
 
-    Returns:
-        Dict[str, str]: Parti bazlı sistem promptları.
-    """
-    base_prompts: Dict[str, str] = {
-        "CHP": "Sen CHP (Cumhuriyet Halk Partisi) hakkında uzman bir bilgi asistanısın.",
-        "AKP": "Sen AKP (Adalet ve Kalkınma Partisi) hakkında uzman bir bilgi asistanısın.",
-        "MHP": "Sen MHP (Milliyetçi Hareket Partisi) hakkında uzman bir bilgi asistanısın.",
-        "İYİ": "Sen İYİ Parti hakkında uzman bir bilgi asistanısın.",
-        "DEM": "Sen DEM (Halkların Eşitlik ve Demokrasi Partisi) hakkında uzman bir bilgi asistanısın.",
-        "SP": "Sen Saadet Partisi hakkında uzman bir bilgi asistanısın.",
-        "ZP": "Sen Zafer Partisi hakkında uzman bir bilgi asistanısın.",
-        "BBP": "Sen Büyük Birlik Partisi hakkında uzman bir bilgi asistanısın.",
-    }
-
-    prompts: Dict[str, str] = {}
-    for party, intro in base_prompts.items():
-        prompt: str = f"""Sen {party} Partisi hakkında uzman bir asistansın. Aşağıdaki bilgilere dayanarak soruyu Türkçe olarak yanıtla.
-
-Bilgi:
-{{context}}
-
-Soru: {{question}}
-
-Kısa ve öz cevap ver:"""
-        prompts[party] = prompt
-
-    return prompts
-
-
-SYSTEM_PROMPTS = create_professional_prompts(PARTY_PDFS)
+YANIT:"""
+    for party in PARTY_PDFS.keys()
+}
 
 # ============================================
 # LOGGING

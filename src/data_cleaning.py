@@ -325,7 +325,7 @@ class DataCleaningAgent:
         )
         
         # Whitelist kontrolü
-        from config import SourceWhitelist
+        from src.config import SourceWhitelist
         if source_key and SourceWhitelist.is_trusted(source_key):
             metadata.is_verified = True
             metadata.source_type = SourceWhitelist.get_source_type(source_key)

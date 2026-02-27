@@ -12,9 +12,9 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-import config
-import utils
-from core.parties import normalize_party_name
+from src import config
+from src import utils
+from src.core.parties import normalize_party_name
 
 logger = logging.getLogger(__name__)
 

@@ -22,8 +22,8 @@ from dataclasses import dataclass, field, asdict
 
 from langchain_core.documents import Document
 
-from config import SourceWhitelist, SourceType
-from data_cleaning import DataCleaningAgent, DocumentMetadata, CleaningConfig
+from src.config import SourceWhitelist, SourceType
+from src.data_cleaning import DataCleaningAgent, DocumentMetadata, CleaningConfig
 
 logger = logging.getLogger(__name__)
 
@@ -201,7 +201,7 @@ class DataIngestionAgent:
         
         # 1. PDF'i yükle
         try:
-            from utils import load_pdf
+            from src.utils import load_pdf
             pages = load_pdf(pdf_path)
             text = '\n'.join([page.page_content for page in pages])
         except Exception as e:
@@ -269,8 +269,8 @@ class DataIngestionAgent:
         # 8. Vector DB'ye ekle
         if embeddings:
             try:
-                from utils import create_vectorstore, load_vectorstore, add_to_vectorstore
-                from config import UNIFIED_VECTOR_DB, COLLECTION_NAME
+                from src.utils import create_vectorstore, load_vectorstore, add_to_vectorstore
+                from src.config import UNIFIED_VECTOR_DB, COLLECTION_NAME
                 
                 if UNIFIED_VECTOR_DB.exists():
                     vectorstore = load_vectorstore(UNIFIED_VECTOR_DB, embeddings)

@@ -8,15 +8,15 @@ from dotenv import load_dotenv
 project_root = Path(__file__).parent.parent
 load_dotenv(project_root / ".env")
 
-sys.path.append(str(Path(__file__).parent))
+sys.path.insert(0, str(project_root))
 
-import config
-import utils
-from core.parties import normalize_parties_list
-from core.llm_setup import create_llm_handler, get_llm_display_name
-from core.streaming import handle_stream_response
-from core.cache import get_vectorstore
-from query_system import ask_question
+from src import config
+from src import utils
+from src.core.parties import normalize_parties_list
+from src.core.llm_setup import create_llm_handler, get_llm_display_name
+from src.core.streaming import handle_stream_response
+from src.core.cache import get_vectorstore
+from src.query_system import ask_question
 
 # Suppress warnings
 logging.getLogger("PIL").setLevel(logging.CRITICAL)
@@ -33,11 +33,165 @@ st.set_page_config(
 )
 
 # ============================================
+# DARK THEME CSS
+# ============================================
+
+st.markdown(
+    """
+<style>
+    /* Base Dark Theme */
+    .stApp {
+        background-color: #0e1117;
+        color: #fafafa;
+    }
+    
+    /* Text Colors */
+    h1, h2, h3, h4, h5, h6, p, label {
+        color: #fafafa !important;
+    }
+    
+    /* Input Fields */
+    .stTextInput > div > div > input {
+        background-color: #262730;
+        color: #fafafa;
+        border: 1px solid #3a3f4b;
+    }
+    .stTextInput > div > div > input:focus {
+        border-color: #4c78a8;
+        box-shadow: 0 0 0 1px #4c78a8;
+    }
+    .stTextArea > div > div > textarea {
+        background-color: #262730;
+        color: #fafafa;
+        border: 1px solid #3a3f4b;
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background-color: #4c78a8;
+        color: #fafafa;
+        border: none;
+    }
+    .stButton > button:hover {
+        background-color: #5a94c7;
+        border: none;
+    }
+    .stButton > button:focus {
+        border: none;
+        box-shadow: 0 0 0 2px #4c78a8;
+    }
+    
+    /* Selectbox */
+    .stSelectbox > div > div > div {
+        background-color: #262730;
+        color: #fafafa;
+    }
+    
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #0e1117;
+        border-right: 1px solid #3a3f4b;
+    }
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] label {
+        color: #fafafa !important;
+    }
+    
+    /* Expander */
+    details > summary {
+        background-color: #262730;
+        color: #fafafa;
+    }
+    div[data-testid="stExpander"] {
+        background-color: #1e2130;
+    }
+    
+    /* Alert Boxes */
+    .stAlert {
+        background-color: #262730;
+    }
+    .stSuccess {
+        background-color: #0e4429;
+        color: #39d353;
+    }
+    .stError {
+        background-color: #da3633;
+        color: #fafafa;
+    }
+    .stWarning {
+        background-color: #9e6a03;
+        color: #fafafa;
+    }
+    .stInfo {
+        background-color: #1158c7;
+        color: #fafafa;
+    }
+    
+    /* Spinner */
+    .stSpinner {
+        color: #4c78a8;
+    }
+    
+    /* Divider */
+    hr {
+        border-color: #3a3f4b;
+    }
+    
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: #262730;
+        color: #fafafa;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #4c78a8;
+    }
+    
+    /* Metric Cards */
+    div[data-testid="metric-container"] {
+        background-color: #1e2130;
+        border: 1px solid #3a3f4b;
+    }
+    
+    /* Progress Bar */
+    .stProgress > div > div > div {
+        background-color: #4c78a8;
+    }
+    
+    /* Slider */
+    .stSlider [data-baseweb="slider"] {
+        color: #4c78a8;
+    }
+    
+    /* Checkbox */
+    .stCheckbox > label > div:first-child {
+        color: #fafafa;
+    }
+    
+    /* Radio */
+    .stRadio > label > div {
+        color: #fafafa;
+    }
+    
+    /* DataFrame/Table */
+    [data-testid="stDataFrame"] {
+        background-color: #1e2130;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+# ============================================
 # MINIMALIST CSS - CLEAN & ELEGANT
 # ============================================
 
 # ============================================
-# MODERN CSS - GLASSMORPHISM & PREMIUM LOOK
+# MODERN CSS - GLASSMORPHISM & PREMIUM LOOK (Dark Theme Compatible)
 # ============================================
 
 st.markdown(
@@ -47,30 +201,34 @@ st.markdown(
 
 html, body, [data-testid="stSidebar"] {
     font-family: 'Inter', sans-serif;
+    background-color: #0e1117;
 }
 
-/* Glassmorphism Sidebar */
+/* Dark Glassmorphism Sidebar */
 [data-testid="stSidebar"] {
-    background-color: rgba(255, 255, 255, 0.05) !important;
+    background-color: rgba(14, 17, 23, 0.95) !important;
     backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid #3a3f4b;
 }
 
-/* Main Container */
+/* Dark Main Container */
 .main {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background-color: #0e1117;
 }
 
-/* Glassmorphism Cards */
+/* Dark Cards */
 div.stButton > button {
     transition: all 0.3s ease;
     border: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    background-color: #262730;
+    color: #fafafa;
 }
 
 div.stButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 7px 14px rgba(0,0,0,0.1);
+    box-shadow: 0 7px 14px rgba(0,0,0,0.4);
+    background-color: #4c78a8;
 }
 
 /* Modern Tabs */
@@ -81,21 +239,23 @@ div.stButton > button:hover {
 
 .stTabs [data-baseweb="tab"] {
     height: 50px;
-    background-color: transparent;
+    background-color: #262730;
+    color: #fafafa;
     border-radius: 4px 4px 0 0;
     gap: 8px;
     padding-top: 10px;
     font-weight: 600;
 }
 
-/* Source Expander */
+/* Source Expander - Dark */
 .source-box {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(38, 39, 48, 0.8);
     padding: 15px;
     border-radius: 10px;
-    border-left: 5px solid #0066FF;
+    border-left: 5px solid #4c78a8;
     margin-bottom: 10px;
     font-size: 0.9rem;
+    color: #fafafa;
 }
 
 /* Logo pulse animation */
@@ -234,7 +394,7 @@ llm_handler, llm_type = setup_llm()
 # ============================================
 
 st.title("Ulak-AI Türk Siyasi Partileri Bilgi Sistemi")
-st.markdown("Açık Kaynak • Ücretsiz • 100% Türkçe" )
+st.markdown("Açık Kaynak • Ücretsiz • 100% Türkçe")
 
 st.markdown("---")
 
@@ -340,13 +500,13 @@ with tab_soru:
                                 st.markdown(
                                     f"""
                                 <div class="source-box">
-                                    <b>Kaynak {i+1} - Sayfa {page_num}</b><br>
+                                    <b>Kaynak {i + 1} - Sayfa {page_num}</b><br>
                                     <i>"{doc.page_content[:500]}..."</i>
                                 </div>
                                 """,
                                     unsafe_allow_html=True,
                                 )
-                    
+
                     # Show web results if available
                     if web_results:
                         with st.expander("🌐 Web Sonuçları", expanded=True):
@@ -373,9 +533,7 @@ with tab_compare:
         default=prepared_parties[:2] if len(prepared_parties) >= 2 else prepared_parties,
     )
 
-    compare_question = st.text_input(
-        "Ortak Sorunuz", placeholder="Örn: Gençlik kolları yapısı nasıldır?", key="comp_q"
-    )
+    compare_question = st.text_input("Ortak Sorunuz", placeholder="Örn: Gençlik kolları yapısı nasıldır?", key="comp_q")
 
     if st.button("Karşılaştır ⚖️", type="primary", use_container_width=True):
         if not compare_question.strip():

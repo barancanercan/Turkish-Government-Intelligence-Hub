@@ -9,21 +9,21 @@ from typing import Any, List, Tuple, Optional
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
-import config
-import utils
-from core.parties import normalize_party_name, normalize_parties_list
-from core.llm_setup import (
+from src import config
+from src import utils
+from src.core.parties import normalize_party_name, normalize_parties_list
+from src.core.llm_setup import (
     setup_ollama_chain,
     create_llm_handler,
     get_llm_display_name,
 )
-from core.router_engine import create_router, IntentAnalysis
-from core.duckduckgo_search import search_web, DuckDuckGoSearch
-from core.streaming import handle_stream_response
-from core.content_filter import should_answer
-from core.search_agent import SearchAgent, create_search_agent
-from core.political_context_agent import get_political_agent, PoliticalContext
-from core.query_analyzer import get_query_analyzer, QueryAnalysis, QuestionType
+from src.core.router_engine import create_router, IntentAnalysis
+from src.core.duckduckgo_search import search_web, DuckDuckGoSearch
+from src.core.streaming import handle_stream_response
+from src.core.content_filter import should_answer
+from src.core.search_agent import SearchAgent, create_search_agent
+from src.core.political_context_agent import get_political_agent, PoliticalContext
+from src.core.query_analyzer import get_query_analyzer, QueryAnalysis, QuestionType
 
 
 def analyze_query_intent(question: str) -> IntentAnalysis:

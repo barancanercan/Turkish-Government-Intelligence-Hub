@@ -14,7 +14,7 @@ from langchain_chroma import Chroma  # ✅ Yeni paket (deprecation fix)
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 
-import config
+from src import config
 
 # Suppress ChromaDB telemetry
 logging.getLogger("chromadb.telemetry.product.posthog").setLevel(logging.CRITICAL)
