@@ -54,5 +54,6 @@ python-dotenv
 # Development Tools (Optional)
 # ============================================
 pytest>=7.4.0
+pytest-mock>=3.14.0
 black
 ruff
