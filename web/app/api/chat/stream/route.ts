@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
           const { done, value } = await reader.read();
           if (done) break;
 
+          // Backend zaten SSE formatında gönderiyor, doğrudan pass-through
           const chunk = decoder.decode(value);
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content: chunk })}\n\n`));
+          controller.enqueue(encoder.encode(chunk));
         }
 
-        controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
         controller.close();
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "Stream error";

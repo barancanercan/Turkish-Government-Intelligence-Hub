@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class ContextGrader:
     """Belge alakalılık değerlendirici."""
 
-    RELEVANCE_THRESHOLD = 0.5
+    RELEVANCE_THRESHOLD = 0.3
 
     def __init__(self, llm=None):
         self.llm = llm

@@ -1,13 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(test:*)",
-      "Bash(ls -la \"C:\\\\Users\\\\user\\\\Desktop\\\\mizan-ai\\\\web\"\" 2>/dev/null || echo \"Web dizini bulunamadı \")",
-      "WebSearch",
-      "Bash(dir:*)",
-      "Bash(python -m py_compile:*)",
       "Bash(python:*)",
-      "Bash(git add:*)"
+      "Bash(pip:*)",
+      "Bash(npm:*)",
+      "Bash(git:*)",
+      "Bash(uvicorn:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(powershell:*)",
+      "WebSearch"
     ]
   }
 }

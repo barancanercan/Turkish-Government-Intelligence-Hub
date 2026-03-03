@@ -1,9 +1,9 @@
-# MizanAI - Requirements
+# MizanAI - Requirements (Cleaned)
 # Baran Can Ercan
-# Last Updated: 26 Şubat 2026 (T-RAG v5.0 - Fixed)
+# Last Updated: 03 Mart 2026 (v7.0 - Vercel Pipeline)
 
 # ============================================
-# Pydantic (Fixed versions for compatibility)
+# Pydantic
 # ============================================
 pydantic>=2.10.0
 pydantic-settings>=2.7.0
@@ -23,49 +23,36 @@ langchain-huggingface>=0.1.2
 langchain-google-genai
 
 # ============================================
-# Vector Database & Embeddings
+# LangGraph (Multi-Agent)
 # ============================================
-chromadb>=0.5.23
-sentence-transformers>=3.3.1
+langgraph>=0.2.0
 
 # ============================================
-# Retrieval (FAZ 2)
+# FastAPI
 # ============================================
-rank-bm25==0.2.2
-numpy==1.26.4
-
-# ============================================
-# Document Processing
-# ============================================
-pypdf==5.1.0
-
-# ============================================
-# ML/DL Frameworks
-# ============================================
-transformers==4.46.3
-torch==2.5.1
-
-# ============================================
-# Web & UI
-# ============================================
-streamlit==1.31.0
+fastapi>=0.115.0
+uvicorn>=0.32.0
 
 # ============================================
 # Web Search (T-RAG)
 # ============================================
 duckduckgo-search>=4.0.0
-wikipedia
 
 # ============================================
-# Optional: Development Tools
-pytest==7.4.4
-pytest-mock
-black
-ruff
+# HTTP & Scraping
+# ============================================
+aiohttp>=3.9.0
+beautifulsoup4>=4.12.0
+
+# ============================================
+# Auth & Security
+# ============================================
+python-jose[cryptography]
 python-dotenv
 
-# FastAPI Auth
-python-jose[cryptography]
-pyjwt
-
-# langchain-openai (for Cloud - add later)
+# ============================================
+# Development Tools (Optional)
+# ============================================
+pytest>=7.4.0
+black
+ruff

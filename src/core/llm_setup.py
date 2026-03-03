@@ -84,14 +84,13 @@ def setup_ollama_chain(party: str) -> Tuple[Any, str]:
     model = os.getenv("OLLAMA_MODEL", config.LLM_MODEL)
     
     llm = OllamaLLM(
-        model=model, 
+        model=model,
         temperature=config.LLM_TEMPERATURE,
         base_url=ollama_base_url,
-        num_predict=config.LLM_MAX_TOKENS,
     )
-    
+
     try:
-        llm.invoke("test", num_predict=5)
+        llm.invoke("test")
     except Exception as e:
         logger.warning(f"⚠️ Ollama test bağlantısı başarısız: {e}")
     
@@ -144,7 +143,7 @@ def get_llm_display_name(llm_type: str) -> str:
     """
     display_names = {
         "gemini": "Gemini 1.5 Flash (Birincil)",
-        "ollama": "Ollama (Yedek)",
+        "ollama": "Kimi K2.5 Cloud (Ollama)",
         "none": "LLM Yok",
     }
     return display_names.get(llm_type, "Bilinmiyor")
@@ -177,7 +176,7 @@ def check_llm_status() -> Dict[str, Any]:
         ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
         model = os.getenv("OLLAMA_MODEL", config.LLM_MODEL)
         llm = OllamaLLM(model=model, base_url=ollama_base_url)
-        llm.invoke("test", num_predict=5)
+        llm.invoke("test")
         status["ollama"]["available"] = True
     except Exception as e:
         status["ollama"]["error"] = str(e)

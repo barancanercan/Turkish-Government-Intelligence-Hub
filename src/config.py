@@ -182,8 +182,8 @@ PARTY_INFO = create_party_info(PARTY_PDFS)
 # ============================================
 
 EMBEDDING_MODEL = "nezahatkorkmaz/turkce-embedding-bge-m3"
-LLM_MODEL = "qwen2.5:7b"
-LLM_TEMPERATURE = 0.3
+LLM_MODEL = "kimi-k2.5:cloud"
+LLM_TEMPERATURE = 0.1  # Deterministic output için düşük temperature (generation_layer ile uyumlu)
 LLM_MAX_TOKENS = 1024
 
 # ============================================

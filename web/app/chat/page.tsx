@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 import {
   MessageSquare,
   Plus,
@@ -534,7 +535,25 @@ export default function ChatPage() {
                           : 'bg-gray-800 text-gray-100 rounded-tl-none'
                       }`}
                     >
-                      <p className="break-words">{message.content}</p>
+                      <div className="break-words prose prose-invert prose-sm max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                            ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
+                            ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
+                            li: ({ children }) => <li className="text-gray-100">{children}</li>,
+                            strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                            em: ({ children }) => <em className="italic">{children}</em>,
+                            h1: ({ children }) => <h1 className="text-xl font-bold mb-2 text-white">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-lg font-bold mb-2 text-white">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-base font-bold mb-1 text-white">{children}</h3>,
+                            code: ({ children }) => <code className="bg-gray-700 px-1 rounded text-sm">{children}</code>,
+                            blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-3 italic text-gray-300">{children}</blockquote>,
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
                     </div>
 
                     {/* Metadata (Asistan Mesajları İçin) */}

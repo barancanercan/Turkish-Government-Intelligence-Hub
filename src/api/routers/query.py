@@ -9,6 +9,7 @@ from typing import Optional, AsyncGenerator
 import time
 import logging
 import asyncio
+import json
 
 from ..schemas import (
     QueryRequest, QueryResponse,
@@ -155,29 +156,29 @@ async def stream_query(
             sources = result.get("sources", [])
             query_type = result.get("query_type", "simple")
 
-            # Stream the answer word by word for smooth UI experience
-            words = answer.split()
-            for word in words:
-                # Yield SSE formatted data
-                yield f"data: {{'content': '{word} '}}\n\n"
-                # Small delay for streaming effect
-                await asyncio.sleep(0.02)
+            if not answer:
+                yield f"data: {json.dumps({'content': 'Yanıt oluşturulamadı.'})}\n\n"
+            else:
+                # Stream in sentence chunks for better performance
+                sentences = answer.replace('. ', '.|').replace('? ', '?|').replace('! ', '!|').split('|')
+                for sentence in sentences:
+                    if sentence.strip():
+                        yield f"data: {json.dumps({'content': sentence.strip() + ' '})}\n\n"
+                        await asyncio.sleep(0.05)  # Slightly longer delay for sentence chunks
 
             # Send sources as a final chunk
             if sources:
-                sources_json = str(sources).replace("'", '"')
-                yield f"data: {{'sources': {sources_json}}}\n\n"
+                yield f"data: {json.dumps({'sources': sources})}\n\n"
 
             # Send metadata
-            yield f"data: {{'query_type': '{query_type}'}}\n\n"
+            yield f"data: {json.dumps({'query_type': query_type})}\n\n"
 
             # Signal completion
             yield "data: [DONE]\n\n"
 
         except Exception as e:
             logger.error(f"Stream query error: {e}")
-            error_msg = str(e).replace('"', '\\"')
-            yield f"data: {{'error': '{error_msg}'}}\n\n"
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
             yield "data: [DONE]\n\n"
 
     return StreamingResponse(
@@ -219,29 +220,30 @@ async def stream_compare(
             party_positions = result.get("party_positions", {})
             sources = result.get("sources", [])
 
-            # Stream the comparison word by word
-            words = comparison.split()
-            for word in words:
-                yield f"data: {{'content': '{word} '}}\n\n"
-                await asyncio.sleep(0.02)
+            # Stream in sentence chunks for better performance
+            if not comparison:
+                yield f"data: {json.dumps({'content': 'Karşılaştırma oluşturulamadı.'})}\n\n"
+            else:
+                sentences = comparison.replace('. ', '.|').replace('? ', '?|').replace('! ', '!|').split('|')
+                for sentence in sentences:
+                    if sentence.strip():
+                        yield f"data: {json.dumps({'content': sentence.strip() + ' '})}\n\n"
+                        await asyncio.sleep(0.05)
 
             # Send party positions
             if party_positions:
-                positions_json = str(party_positions).replace("'", '"')
-                yield f"data: {{'party_positions': {positions_json}}}\n\n"
+                yield f"data: {json.dumps({'party_positions': party_positions})}\n\n"
 
             # Send sources
             if sources:
-                sources_json = str(sources).replace("'", '"')
-                yield f"data: {{'sources': {sources_json}}}\n\n"
+                yield f"data: {json.dumps({'sources': sources})}\n\n"
 
             # Signal completion
             yield "data: [DONE]\n\n"
 
         except Exception as e:
             logger.error(f"Stream compare error: {e}")
-            error_msg = str(e).replace('"', '\\"')
-            yield f"data: {{'error': '{error_msg}'}}\n\n"
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
             yield "data: [DONE]\n\n"
 
     return StreamingResponse(

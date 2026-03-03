@@ -5,9 +5,9 @@ __pycache__/
 *.egg-info/
 
 # Project Specific
-data/                 # PDFs (local only - too large for git)
+data/
+vector_db/
 *.log
-app.log
 
 # IDEs
 .idea/
@@ -17,8 +17,13 @@ app.log
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Environment
 .env
 
-api-test.py
-.streamlit/secrets.toml
-nul
+# Cache
+.ruff_cache/
+.pytest_cache/
+
+# Claude Code
+.claude/

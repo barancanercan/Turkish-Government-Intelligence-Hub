@@ -14,9 +14,12 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     DEBUG: bool = True
     
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8501"]
-    
-    JWT_SECRET_KEY: str = "your-secret-key-change-in-production"
+    CORS_ORIGINS: List[str] = os.getenv(
+        "CORS_ORIGINS",
+        "http://localhost:3000,http://localhost:8501"
+    ).split(",")
+
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "dev-only-change-in-production")
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     

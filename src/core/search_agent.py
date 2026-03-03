@@ -76,24 +76,26 @@ class SearchAgent:
         """
         SearchStrategyAgent ile entegre arama yapar.
 
-        1. StrategyAgent sorguyu analiz eder
-        2. Optimize edilmiş arama sorguları üretir
+        1. StrategyAgent sorguyu analiz eder ve PARTİYİ TESPİT EDER
+        2. Optimize edilmiş arama sorguları üretir (doğru parti ile)
         3. Sorgular çalıştırılır ve sonuçlar birleştirilir
 
         Args:
             query: Arama sorgusu
-            party: Parti kodu (opsiyonel)
+            party: Parti kodu (opsiyonel - sorgudan çıkarılacak)
 
         Returns:
             SearchContext: Arama bağlamı
         """
         logger.info(f"SearchAgent: '{query}' icin arama yapiliyor...")
 
-        # 1. Strateji agent'ından sorguları al
+        # 1. Strateji agent'ından sorguları al - PARTİ SORGUDAN ÇIKARILACAK!
         strategy_agent = get_search_strategy_agent()
         strategy = strategy_agent.create_strategy(query, party)
 
-        logger.info(f"Strateji: {strategy.reasoning}")
+        # Strateji'den tespit edilen partiyi kullan
+        effective_party = strategy.party
+        logger.info(f"Strateji: {strategy.reasoning} (Parti: {effective_party})")
 
         # 2. Tüm sorguları çalıştır ve sonuçları topla
         all_results: List[SearchResult] = []

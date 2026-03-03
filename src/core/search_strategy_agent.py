@@ -56,6 +56,18 @@ class SearchStrategyAgent:
     optimum arama sorgularını üretir.
     """
 
+    # Parti tespit kalıpları
+    PARTY_PATTERNS = {
+        "AKP": [r'\bAKP\b', r'\bAK\s*Parti\b', r'\bAdalet\s*ve\s*Kalkınma\b', r'\bakp\b', r'\bak parti\b'],
+        "CHP": [r'\bCHP\b', r'\bCumhuriyet\s*Halk\b', r'\bchp\b'],
+        "MHP": [r'\bMHP\b', r'\bMilliyetçi\s*Hareket\b', r'\bmhp\b'],
+        "İYİ": [r'\bİYİ\b', r'\bIYI\b', r'\biyi\s*parti\b', r'\bİYİ\s*Parti\b'],
+        "DEM": [r'\bDEM\b', r'\bHDP\b', r'\bHalkların\s*Eşitlik\b', r'\bdem\b'],
+        "SP": [r'\bSP\b', r'\bSaadet\b', r'\bsp\b'],
+        "ZP": [r'\bZP\b', r'\bZafer\b', r'\bzp\b'],
+        "BBP": [r'\bBBP\b', r'\bBüyük\s*Birlik\b', r'\bbbp\b'],
+    }
+
     # Niyet tespit kalıpları
     INTENT_PATTERNS = {
         SearchIntent.PERSON_CURRENT: [
@@ -140,6 +152,15 @@ class SearchStrategyAgent:
 
     def __init__(self):
         pass
+
+    def _extract_party_from_query(self, query: str) -> Optional[str]:
+        """Sorgudan parti ismini çıkarır."""
+        for party, patterns in self.PARTY_PATTERNS.items():
+            for pattern in patterns:
+                if re.search(pattern, query, re.IGNORECASE):
+                    logger.info(f"Parti tespit edildi: {party} (pattern: {pattern})")
+                    return party
+        return None
 
     def _detect_intent(self, query: str) -> SearchIntent:
         """Sorgunun niyetini tespit eder."""
@@ -280,11 +301,17 @@ class SearchStrategyAgent:
 
         Args:
             query: Kullanıcı sorgusu
-            party: Parti kodu (opsiyonel)
+            party: Parti kodu (opsiyonel - sorgudan çıkarılacak)
 
         Returns:
             SearchStrategy: Arama stratejisi
         """
+        # ÖNEMLİ: Önce sorgudan parti çıkar, dışarıdan gelen değil!
+        detected_party = self._extract_party_from_query(query)
+        if detected_party:
+            party = detected_party
+            logger.info(f"Sorgudan parti çıkarıldı: {party}")
+
         # Niyeti tespit et
         intent = self._detect_intent(query)
 
