@@ -5,9 +5,8 @@ Tavily yerine DuckDuckGo kullanarak güncel siyasi bilgileri çeker.
 """
 
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 from dataclasses import dataclass
-from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +60,7 @@ class DuckDuckGoSearch:
                             snippet=r.get("body", ""),
                             source="duckduckgo-news"
                         ))
-                except:
+                except Exception:
                     pass
                 
                 # Sonra normal arama
@@ -90,7 +89,7 @@ class DuckDuckGoSearch:
             SearchResult(
                 title=f"Mock Sonuç: {query}",
                 url="https://example.com",
-                snippet=f"Bu bir mock sonuçtur. duckduckgo-search paketini kurunuz.",
+                snippet="Bu bir mock sonuçtur. duckduckgo-search paketini kurunuz.",
                 source="mock"
             )
         ]

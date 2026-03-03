@@ -9,11 +9,11 @@ SearchStrategyAgent ile entegre çalışır:
 
 import re
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 from dataclasses import dataclass
 
 from src.core.duckduckgo_search import DuckDuckGoSearch, SearchResult
-from src.core.search_strategy_agent import get_search_strategy_agent, SearchStrategy
+from src.core.search_strategy_agent import get_search_strategy_agent
 
 logger = logging.getLogger(__name__)
 

@@ -4,7 +4,6 @@ Party information endpoints
 """
 
 from fastapi import APIRouter, HTTPException
-from typing import List
 import logging
 
 from ..schemas import PartyInfo, PartyListResponse

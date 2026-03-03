@@ -13,16 +13,16 @@ import re
 import logging
 import hashlib
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple, TYPE_CHECKING
+from typing import List, Dict, Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from langchain_huggingface import HuggingFaceEmbeddings
+    pass
 from datetime import datetime
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass
 
 from langchain_core.documents import Document
 
-from src.config import SourceWhitelist, SourceType
+from src.config import SourceWhitelist
 from src.data_cleaning import DataCleaningAgent, DocumentMetadata, CleaningConfig
 
 logger = logging.getLogger(__name__)
@@ -231,7 +231,6 @@ class DataIngestionAgent:
         
         # 5. Versiyon oluştur
         version = self.versioning_manager.compute_version(cleaned_text, source_key)
-        content_hash = self.versioning_manager.compute_content_hash(cleaned_text)
         metadata.version = version
         
         # 6. Chunk'lara böl
@@ -270,14 +269,14 @@ class DataIngestionAgent:
         if embeddings:
             try:
                 from src.utils import create_vectorstore, load_vectorstore, add_to_vectorstore
-                from src.config import UNIFIED_VECTOR_DB, COLLECTION_NAME
+                from src.config import UNIFIED_VECTOR_DB
                 
                 if UNIFIED_VECTOR_DB.exists():
                     vectorstore = load_vectorstore(UNIFIED_VECTOR_DB, embeddings)
                     # Eski verileri temizle
                     try:
                         vectorstore.delete(where={"source_key": source_key})
-                    except:
+                    except Exception:
                         pass
                     add_to_vectorstore(documents, vectorstore)
                 else:

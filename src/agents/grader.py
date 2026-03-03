@@ -90,7 +90,7 @@ class ContextGrader:
             all_scored = [(doc, self.grade_document(question, doc)) for doc in documents]
             all_scored.sort(key=lambda x: x[1], reverse=True)
             scored_docs = all_scored[:2]
-            logger.warning(f"No docs passed threshold, using top 2")
+            logger.warning("No docs passed threshold, using top 2")
 
         filtered_docs = [doc for doc, _ in scored_docs]
         scores = [score for _, score in scored_docs]

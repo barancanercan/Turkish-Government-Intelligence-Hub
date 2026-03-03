@@ -8,7 +8,7 @@ Bu agent:
 """
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List, Dict, Optional, Tuple
 from enum import Enum
 import logging

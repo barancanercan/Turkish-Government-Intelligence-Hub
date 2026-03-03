@@ -63,10 +63,10 @@ class OCRCleaner:
         r'–': '-',
         r'­': '',  # Soft hyphen
         # Tırnak hataları
-        r'"': '"',
-        r'"': '"',
-        r''': "'",
-        r''': "'",
+        '\u201c': '"',
+        '\u201d': '"',
+        '\u2018': "'",
+        '\u2019': "'",
         # Parantez hataları
         r'\[\]': '',
         r'\(\)': '',
@@ -84,7 +84,6 @@ class OCRCleaner:
         # Büyük harf düzeltmeleri
         r'\bİ\b': 'İ',
         r'\bI\b': 'ı',  # Turkish lowercase I
-        r'\bI\b': 'I',  # Keep uppercase I
         # Noktalama
         r'\s\.\.\.': '...',
         r'\.\.\.\s': '...',

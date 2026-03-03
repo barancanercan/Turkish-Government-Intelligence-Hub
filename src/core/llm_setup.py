@@ -5,7 +5,7 @@ Gemini (Birincil) + Ollama (Yedek) Configuration
 
 import os
 import logging
-from typing import Any, Optional, Dict, Tuple
+from typing import Any, Dict, Tuple
 
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import PromptTemplate
@@ -13,7 +13,6 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from src import config
-from src import utils
 from src.core.parties import normalize_party_name
 
 logger = logging.getLogger(__name__)

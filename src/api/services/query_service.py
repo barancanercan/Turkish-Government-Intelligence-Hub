@@ -57,7 +57,6 @@ class QueryService:
             from src.core.query_analyzer import get_query_analyzer
             from src.core.content_filter import should_answer
             from src.core.cache import get_vectorstore
-            from src.core.llm_setup import create_llm_handler
             from src.core.parties import normalize_party_name
             from src import config
 
@@ -197,15 +196,12 @@ YANIT:"""
         Process a comparison query using full pipeline for each party.
         """
         try:
-            from src.query_system import search_local_knowledge, search_online_knowledge
+            from src.query_system import search_local_knowledge
             from src.core.parties import normalize_party_name
             from src.core.cache import get_vectorstore
             from src.core.llm_setup import create_llm_handler
-            from src.agents.grader import get_context_grader
-
             vectorstore = get_vectorstore()
             llm, llm_type = create_llm_handler(parties[0])
-            grader = get_context_grader()
 
             party_positions = {}
             all_sources = []

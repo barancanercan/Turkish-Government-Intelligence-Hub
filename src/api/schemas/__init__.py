@@ -3,7 +3,7 @@ Pydantic Schemas for Request/Response Models
 """
 
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict
 from datetime import datetime
 
 

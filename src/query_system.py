@@ -13,17 +13,14 @@ from src import config
 from src import utils
 from src.core.parties import normalize_party_name, normalize_parties_list
 from src.core.llm_setup import (
-    setup_ollama_chain,
     create_llm_handler,
-    get_llm_display_name,
 )
 from src.core.router_engine import create_router, IntentAnalysis
-from src.core.duckduckgo_search import search_web, DuckDuckGoSearch
 from src.core.streaming import handle_stream_response
 from src.core.content_filter import should_answer
-from src.core.search_agent import SearchAgent, create_search_agent
-from src.core.political_context_agent import get_political_agent, PoliticalContext
-from src.core.query_analyzer import get_query_analyzer, QueryAnalysis, QuestionType
+from src.core.search_agent import create_search_agent
+from src.core.political_context_agent import get_political_agent
+from src.core.query_analyzer import get_query_analyzer
 
 
 def analyze_query_intent(question: str) -> IntentAnalysis:
@@ -209,7 +206,7 @@ def ask_question(
     )
 
     # DEBUG: Alt soru analizi
-    utils.logger.info(f"=== QUERY ANALYSIS ===")
+    utils.logger.info("=== QUERY ANALYSIS ===")
     utils.logger.info(f"Original: {question}")
     utils.logger.info(f"Sub-questions: {len(query_analysis.sub_questions)}")
     for i, sq in enumerate(query_analysis.sub_questions):
@@ -237,7 +234,7 @@ def ask_question(
     needs_web = needs_web_from_analysis or intent.needs_web_search or first_score > config.SIMILARITY_THRESHOLD
 
     # DEBUG: Web araması kararı
-    utils.logger.info(f"=== WEB SEARCH DECISION ===")
+    utils.logger.info("=== WEB SEARCH DECISION ===")
     utils.logger.info(f"needs_web_from_analysis: {needs_web_from_analysis}")
     utils.logger.info(f"intent.needs_web_search: {intent.needs_web_search}")
     utils.logger.info(f"first_score: {first_score} (threshold: {config.SIMILARITY_THRESHOLD})")
@@ -294,10 +291,10 @@ def single_party_mode(party: str):
         utils.logger.error("❌ LLM yok!")
         return
 
-    utils.logger.info(f"✅ Sistem hazır!")
+    utils.logger.info("✅ Sistem hazır!")
     
     while True:
-        question = input(f"Sorunuz: ").strip()
+        question = input("Sorunuz: ").strip()
         if question.lower() in ["q", "quit", "exit"]:
             break
         if not question:

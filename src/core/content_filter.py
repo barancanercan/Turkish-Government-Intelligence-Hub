@@ -4,7 +4,7 @@ Küfür/Hakaret içeren sorguları filtreler
 """
 
 import re
-from typing import List, Tuple
+from typing import Tuple
 
 OFFENSIVE_WORDS = [
     "orospu", "orospusu", "orospu çocuğu", "orospu çocuk", "orosbu",
@@ -69,7 +69,7 @@ def should_answer(query: str) -> Tuple[bool, str]:
     is_bad, reason = is_offensive(query)
     
     if is_bad:
-        return False, f"Bu soru uygunsuz içerik barındırdığı için yanıtlanamıyor. Siyasi konularda size yardımcı olmaktan memnuniyet duyarım. Saygılarımla."
+        return False, "Bu soru uygunsuz içerik barındırdığı için yanıtlanamıyor. Siyasi konularda size yardımcı olmaktan memnuniyet duyarım. Saygılarımla."
     
     return True, ""
 

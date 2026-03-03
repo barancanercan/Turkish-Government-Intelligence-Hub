@@ -10,8 +10,8 @@ Bu agent:
 
 import re
 import logging
-from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Tuple
+from dataclasses import dataclass
+from typing import List, Optional
 from enum import Enum
 
 logger = logging.getLogger(__name__)
@@ -200,7 +200,7 @@ class SearchStrategyAgent:
 
         party_info = self.PARTY_SEARCH_TERMS.get(party, {})
         party_aliases = party_info.get("aliases", [party] if party else [])
-        topic_terms = self.TOPIC_SEARCH_TERMS.get(topic, [])
+        _ = self.TOPIC_SEARCH_TERMS.get(topic, [])  # Reserved for future use
 
         # Intent'e göre sorgu üret
         if intent == SearchIntent.ENTITY_LIST:

@@ -6,7 +6,7 @@ Sorguyu analiz ederek yerel bilgi veya web araması kararı verir.
 
 import re
 import logging
-from typing import Dict, Any, Tuple, List
+from typing import Tuple, List
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,7 @@
 Authentication Middleware
 """
 
-from fastapi import Header, HTTPException, Depends, status
+from fastapi import Header, HTTPException, status
 from typing import Optional
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
@@ -58,7 +58,7 @@ async def get_current_user(authorization: Optional[str] = Header(None)) -> str:
     try:
         payload = decode_token(token)
         return payload.get("sub", "anonymous")
-    except:
+    except Exception:
         return "anonymous"
 
 
