@@ -1,6 +1,10 @@
-# mizan-ai
+<div align="center">
+  <img src="logo.png" alt="MizanAI Logo" width="200"/>
 
-**Türk Siyasi Belgeleri için Tool-Augmented RAG (T-RAG) Multi-Agent Platform**
+  # MizanAI
+
+  **Türk Siyasi Belgeleri için Tool-Augmented RAG (T-RAG) Platform**
+</div>
 
 [![AI/ML](https://img.shields.io/badge/AI%20Intelligence-RAG-blue.svg)](#)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)

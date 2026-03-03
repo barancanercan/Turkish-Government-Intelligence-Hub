@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
-import { Scale, Menu, X, LogOut, LogIn } from "lucide-react";
+import { Menu, X, LogOut, LogIn } from "lucide-react";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,10 +24,8 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-xl group">
-            <div className="p-2 bg-blue-600 rounded-lg group-hover:bg-blue-700 transition-colors">
-              <Scale className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white">MİZAN-AI</span>
+            <Image src="/logo.png" alt="MizanAI" width={36} height={36} className="rounded-lg" />
+            <span className="text-white">MizanAI</span>
           </Link>
 
           {/* Desktop Navigation */}

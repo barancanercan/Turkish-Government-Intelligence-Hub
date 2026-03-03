@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Brain, FileText, MessageSquare, Sparkles, Users } from "lucide-react";
 import { Navbar } from "@/components";
 import { Footer } from "@/components";
@@ -24,14 +25,12 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="mb-6 inline-block">
-            <span className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
-              🚀 Siyasi Analiz Platformu
-            </span>
+          <div className="mb-8">
+            <Image src="/logo.png" alt="MizanAI" width={120} height={120} className="mx-auto" />
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
-            MİZAN-AI
+            MizanAI
           </h1>
 
           <p className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">

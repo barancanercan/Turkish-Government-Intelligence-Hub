@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import {
   MessageSquare,
@@ -10,10 +11,8 @@ import {
   Menu,
   X,
   Send,
-  Bot,
   User,
   Loader2,
-  Scale,
   Home,
 } from 'lucide-react';
 import { TypingIndicator } from '@/components/TypingIndicator';
@@ -373,10 +372,8 @@ export default function ChatPage() {
         {/* Logo / Başlık */}
         <div className="p-4 border-b border-gray-800 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
-            <div className="p-1.5 bg-blue-600 rounded-lg">
-              <Scale size={18} className="text-white" />
-            </div>
-            <h1 className="font-bold text-lg">Mizan AI</h1>
+            <Image src="/logo.png" alt="MizanAI" width={32} height={32} className="rounded-lg" />
+            <h1 className="font-bold text-lg">MizanAI</h1>
           </Link>
           {isMobile && (
             <button
@@ -479,10 +476,10 @@ export default function ChatPage() {
           <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-gray-400">
-              <div className="p-4 bg-blue-600/10 rounded-full mb-6">
-                <Bot size={48} className="text-blue-500" />
+              <div className="mb-6">
+                <Image src="/logo.png" alt="MizanAI" width={80} height={80} />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Mizan AI Asistan</h3>
+              <h3 className="text-xl font-bold text-white mb-2">MizanAI Asistan</h3>
               <p className="text-sm text-center max-w-md mb-6">
                 Turk siyasi partileri hakkinda sorular sorun. CHP, AKP, MHP, IYI, DEM, SP, ZP, BBP hakkinda bilgi alabilirsiniz.
               </p>
@@ -508,17 +505,13 @@ export default function ChatPage() {
                   }`}
                 >
                   {/* Avatar */}
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      message.role === 'user'
-                        ? 'bg-blue-600'
-                        : 'bg-gray-700'
-                    }`}
-                  >
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {message.role === 'user' ? (
-                      <User size={18} />
+                      <div className="w-full h-full bg-blue-600 flex items-center justify-center">
+                        <User size={18} />
+                      </div>
                     ) : (
-                      <Bot size={18} />
+                      <Image src="/logo.png" alt="AI" width={32} height={32} />
                     )}
                   </div>
 
@@ -596,8 +589,8 @@ export default function ChatPage() {
               {/* Yükleme Göstergesi */}
               {isLoading && (
                 <div className="flex gap-4 items-center">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-700">
-                    <Bot size={18} />
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <Image src="/logo.png" alt="AI" width={32} height={32} />
                   </div>
                   <TypingIndicator />
                 </div>
