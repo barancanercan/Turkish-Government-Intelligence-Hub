@@ -28,7 +28,7 @@ class ContextGrader:
         content = document.page_content[:500]  # İlk 500 karakter
         party = document.metadata.get("party", "unknown")
 
-        # Basit keyword-based grading (LLM olmadan hızlı)
+        # Basit keyword-based grading (temel skor)
         question_lower = question.lower()
         content_lower = content.lower()
 
@@ -56,7 +56,26 @@ class ContextGrader:
         elif "nedir" in question_lower and any(w in content_lower for w in ["tanim", "amac", "ilke"]):
             score += 0.2
 
-        return min(1.0, score)
+        base_score = min(1.0, score)
+
+        # LLM ile ek değerlendirme (opsiyonel, fast model)
+        if self.llm and base_score >= 0.2:  # Sadece potansiyel alakalı belgeler için
+            try:
+                grading_prompt = f"""Belgenin soruyla alakalılığını değerlendir.
+
+Soru: {question}
+Belge (ilk 300 karakter): {content[:300]}
+
+Bu belge soruyu yanıtlamak için faydalı mı? Sadece "EVET" veya "HAYIR" yaz:"""
+
+                response = str(self.llm.invoke(grading_prompt)).strip().upper()
+                if "EVET" in response:
+                    base_score = min(1.0, base_score + 0.2)
+                    logger.debug(f"LLM grading: +0.2 boost for relevant doc")
+            except Exception as e:
+                logger.debug(f"LLM grading skipped: {e}")
+
+        return base_score
 
     def filter_documents(
         self,
@@ -102,7 +121,15 @@ class ContextGrader:
 _grader_instance = None
 
 def get_context_grader() -> ContextGrader:
+    """Fast model ile ContextGrader döndür."""
     global _grader_instance
     if _grader_instance is None:
-        _grader_instance = ContextGrader()
+        try:
+            from src.core.llm_setup import get_ollama_model
+            fast_llm = get_ollama_model("fast")
+            _grader_instance = ContextGrader(llm=fast_llm)
+            logger.info("ContextGrader initialized with fast model")
+        except Exception as e:
+            logger.warning(f"Fast model yüklenemedi, LLM'siz devam: {e}")
+            _grader_instance = ContextGrader()
     return _grader_instance

@@ -6,18 +6,25 @@ export async function POST(req: NextRequest) {
 
   const encoder = new TextEncoder();
 
+  // 10 dakika timeout (büyük modeller için)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 600000);
+
   const stream = new ReadableStream({
-    async start(controller) {
+    async start(streamController) {
       try {
         const response = await fetch(`${backendUrl}/api/v1/query/stream`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question: message }),
+          signal: controller.signal,
         });
 
+        clearTimeout(timeoutId);
+
         if (!response.ok || !response.body) {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "Backend error" })}\n\n`));
-          controller.close();
+          streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "Backend error" })}\n\n`));
+          streamController.close();
           return;
         }
 
@@ -30,14 +37,15 @@ export async function POST(req: NextRequest) {
 
           // Backend zaten SSE formatında gönderiyor, doğrudan pass-through
           const chunk = decoder.decode(value);
-          controller.enqueue(encoder.encode(chunk));
+          streamController.enqueue(encoder.encode(chunk));
         }
 
-        controller.close();
+        streamController.close();
       } catch (error) {
+        clearTimeout(timeoutId);
         const errorMessage = error instanceof Error ? error.message : "Stream error";
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: errorMessage })}\n\n`));
-        controller.close();
+        streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ error: errorMessage })}\n\n`));
+        streamController.close();
       }
     },
   });

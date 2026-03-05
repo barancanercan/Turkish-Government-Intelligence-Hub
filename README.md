@@ -16,7 +16,7 @@
 
 ---
 
-## Ozellikler (v7.0 - Advanced Multi-Agent T-RAG)
+## Ozellikler (v7.1 - Advanced Multi-Agent T-RAG)
 
 ### Coklu-Ajan Mimarisi (LangGraph)
 
@@ -56,7 +56,9 @@
 
 ### Esnek LLM Destegi
 
-- **Ollama Modelleri:** qwen2.5:7b, kimi-k2.5:cloud, phi3, mistral, gemma3, llama3.2
+- **Ollama Modelleri:** qwen2.5:7b, qwen3.5, phi3, mistral, gemma3, llama3.2
+- **Multi-Model Mimarisi:** Ana (main) ve hizli (fast) model ayri ayri yapilandirilabilir
+- **Repetition Prevention:** repeat_penalty=1.2 ile tekrar onleme
 - **Smart Fallback:** Ana model basarisiz olursa yedek modele gecer
 - **Configurable:** config.py uzerinden model degisimi
 
@@ -260,8 +262,16 @@ mizan-ai/
 
 ```python
 # src/config.py
-LLM_MODEL = "qwen2.5:7b"        # veya "kimi-k2.5:cloud"
-LLM_TEMPERATURE = 0.1           # Deterministic output
+LLM_MODELS = {
+    "main": "qwen2.5:7b",   # Ana model - karmasik sorular
+    "fast": "qwen2.5:7b",   # Hizli model - web sentezi, grading
+}
+LLM_MODEL = "qwen2.5:7b"
+LLM_TEMPERATURE = 0.3           # Yaraticilik ve tekrar onleme dengesi
+
+# src/core/llm_setup.py
+repeat_penalty = 1.2            # Tekrar onleme
+num_predict = 512               # Max token siniri
 ```
 
 ### Context Grader Threshold
@@ -320,6 +330,6 @@ MIT License altinda dagitilmaktadir. Detaylar icin `LICENSE` dosyasina bakin.
 ---
 
 <div align="center">
-  <b>mizan-ai v7.0</b><br>
+  <b>mizan-ai v7.1</b><br>
   Turk Siyasi Belgeleri icin Advanced Multi-Agent RAG Platform
 </div>

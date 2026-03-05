@@ -18,6 +18,30 @@ from src.core.parties import normalize_party_name
 logger = logging.getLogger(__name__)
 
 
+def get_ollama_model(model_type: str = "main") -> OllamaLLM:
+    """
+    Model tipine göre Ollama LLM döndür.
+
+    Args:
+        model_type: "main" (ana beyin) veya "fast" (hızlı işler)
+
+    Returns:
+        OllamaLLM: Yapılandırılmış Ollama modeli
+    """
+    model_name = config.LLM_MODELS.get(model_type, config.LLM_MODELS["main"])
+    ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+
+    logger.info(f"Using model: {model_name} ({model_type})")
+
+    return OllamaLLM(
+        model=model_name,
+        temperature=config.LLM_TEMPERATURE,
+        base_url=ollama_base_url,
+        repeat_penalty=1.2,  # Tekrar önleme
+        num_predict=512,     # Max token sınırı
+    )
+
+
 def setup_gemini_chain(party: str) -> Tuple[Any, str]:
     """
     Gemini LLM için chain oluşturur (Birincil).
@@ -142,7 +166,7 @@ def get_llm_display_name(llm_type: str) -> str:
     """
     display_names = {
         "gemini": "Gemini 1.5 Flash (Birincil)",
-        "ollama": "Kimi K2.5 Cloud (Ollama)",
+        "ollama": "Qwen 2.5 7B (Ollama)",
         "none": "LLM Yok",
     }
     return display_names.get(llm_type, "Bilinmiyor")

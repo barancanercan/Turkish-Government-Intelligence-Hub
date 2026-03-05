@@ -219,8 +219,24 @@ class SearchSynthesizerAgent:
             if f.source_url and f.source_url not in sources:
                 sources.append(f.source_url)
 
-        # Özet oluştur
-        if facts:
+        # LLM ile sentez (fast model kullan)
+        if self.llm and facts:
+            try:
+                facts_text = "\n".join([f"- {fact.fact}" for fact in facts])
+                synthesis_prompt = f"""Aşağıdaki bilgileri {detected_party} hakkında kısa ve öz bir şekilde özetle:
+
+Bilgiler:
+{facts_text}
+
+Soru: {query}
+
+Özet (1-2 cümle):"""
+                summary = str(self.llm.invoke(synthesis_prompt)).strip()
+                logger.info(f"LLM synthesis completed for {detected_party}")
+            except Exception as e:
+                logger.warning(f"LLM synthesis failed: {e}")
+                summary = f"{detected_party} hakkında {len(facts)} bilgi bulundu."
+        elif facts:
             summary = f"{detected_party} hakkında {len(facts)} bilgi bulundu."
         else:
             # Bilinen bilgiyi kullan
@@ -249,7 +265,15 @@ class SearchSynthesizerAgent:
 _synthesizer = None
 
 def get_search_synthesizer() -> SearchSynthesizerAgent:
+    """Fast model ile SearchSynthesizerAgent döndür."""
     global _synthesizer
     if _synthesizer is None:
-        _synthesizer = SearchSynthesizerAgent()
+        try:
+            from src.core.llm_setup import get_ollama_model
+            fast_llm = get_ollama_model("fast")
+            _synthesizer = SearchSynthesizerAgent(llm=fast_llm)
+            logger.info("SearchSynthesizer initialized with fast model")
+        except Exception as e:
+            logger.warning(f"Fast model yüklenemedi, LLM'siz devam: {e}")
+            _synthesizer = SearchSynthesizerAgent()
     return _synthesizer

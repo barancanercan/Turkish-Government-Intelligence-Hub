@@ -152,13 +152,9 @@ SORU: {question}
 
 YANIT:"""
 
-            # Invoke LLM
-            from langchain_ollama import OllamaLLM
-            direct_llm = OllamaLLM(
-                model=config.LLM_MODEL,
-                temperature=config.LLM_TEMPERATURE,
-                base_url="http://localhost:11434",
-            )
+            # Invoke LLM - Ana model (main) kullan
+            from src.core.llm_setup import get_ollama_model
+            direct_llm = get_ollama_model("main")
 
             answer = str(direct_llm.invoke(system_prompt))
 
@@ -237,15 +233,10 @@ GÖREV:
 
 KARŞILAŞTIRMALI YANIT:"""
 
-            # Get LLM for direct invoke
-            from langchain_ollama import OllamaLLM
-            from src import config
+            # Get LLM for direct invoke - Ana model (main) kullan
+            from src.core.llm_setup import get_ollama_model
 
-            direct_llm = OllamaLLM(
-                model=config.LLM_MODEL,
-                temperature=config.LLM_TEMPERATURE,
-                base_url="http://localhost:11434",
-            )
+            direct_llm = get_ollama_model("main")
 
             response = direct_llm.invoke(comparison_prompt)
             comparison = str(response)
