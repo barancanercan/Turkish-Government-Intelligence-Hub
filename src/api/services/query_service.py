@@ -131,6 +131,7 @@ class QueryService:
             system_prompt = f"""Sen {target_party} hakkında uzman bir asistansın.
 
 GÖREV: Aşağıdaki soruyu yanıtla.
+
 KURALLAR:
 1. Önce web araştırma sonuçlarını kullan (güncel bilgi)
 2. Sonra yerel belgelerden destekle
@@ -138,12 +139,20 @@ KURALLAR:
 4. Türkçe yanıt ver
 5. Bilgi bulunamadıysa açıkça belirt
 
+FORMAT (ZORUNLU - Markdown kullan):
+- Ana başlıklar için ## kullan
+- Alt başlıklar için ### kullan
+- Madde listeleri için - kullan
+- Önemli kavramları **kalın** yap
+- Her bölüm arasında boş satır bırak
+- Karşılaştırmalarda madde listesi kullan
+
 BAĞLAM:
 {full_context}
 
 SORU: {question}
 
-YANIT:"""
+YANITINI MARKDOWN FORMATINDA VER:"""
 
             # Invoke LLM - Ana model (main) kullan
             from src.core.llm_setup import get_ollama_model
@@ -222,7 +231,14 @@ GÖREV:
 3. Türkçe ve tarafsız yanıt ver
 4. Kaynaklara atıfta bulun
 
-KARŞILAŞTIRMALI YANIT:"""
+FORMAT (ZORUNLU - Markdown kullan):
+- Her parti için ## Parti Adı başlığı kullan
+- Alt konular için ### kullan
+- Madde listeleri için - kullan
+- Önemli kavramları **kalın** yap
+- Sonunda ## Karşılaştırma Özeti bölümü ekle
+
+YANITINI MARKDOWN FORMATINDA VER:"""
 
             # Get LLM for direct invoke - Ana model (main) kullan
             from src.core.llm_setup import get_ollama_model

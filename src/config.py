@@ -327,10 +327,17 @@ KURALLAR:
 3. Kisa, net ve anlasilir Turkce kullan
 4. Emin degilsen "Bu bilgi mevcut belgelerde bulunamiyor" de
 
+FORMAT KURALLARI (ZORUNLU):
+- Basliklar icin ## ve ### kullan
+- Madde isaretleri icin - veya * kullan
+- Onemli kelimeleri **kalin** yap
+- Paragraflar arasinda bos satir birak
+- Karsilastirmalarda tablo veya liste kullan
+
 BAGLAM: {{context}}
 SORU: {{question}}
 
-YANIT:"""
+YANIT (Markdown formatinda):"""
     for party in PARTY_PDFS.keys()
 }
 
