@@ -36,6 +36,15 @@ Kullanıcılar doğal dil ile sorular sorabilir, partilerin politikalarını kar
 
 ---
 
+## 🎬 Demo
+
+<div align="center">
+  <img src="sample.gif" alt="MizanAI Demo" width="800"/>
+  <p><em>MizanAI sohbet arayüzü - Gerçek zamanlı yapay zeka analizi</em></p>
+</div>
+
+---
+
 ## ✨ Özellikler
 
 ### 🤖 Multi-Agent Yapay Zeka Sistemi
