@@ -4,40 +4,7 @@
 
 ---
 
-🗳️ **Türkiye'de siyasi bilgiye erişim neden bu kadar zor?**
-
-Bir partinin ekonomi politikasını öğrenmek istediğinizde ne yapıyorsunuz?
-
-Google'da saatlerce arama, yanlı haber siteleri, eksik bilgiler, manipülatif içerikler...
-
-**Sorun:** 8 siyasi partinin tüzükleri, programları ve resmi belgeleri var — ama kimse bunları okumuyor. Çünkü yüzlerce sayfa, karmaşık dil ve dağınık kaynaklar.
-
-**Çözüm:** MizanAI
-
-> *mizan (Arapça)* — terazi, denge, ölçü ⚖️
-
-Yapay zeka destekli bir platform geliştirdim. Doğal dille soru soruyorsunuz, sistem partilerin **resmi belgelerinden** yanıt veriyor. Her bilginin kaynağı gösteriliyor.
-
-**Örnek sorular:**
-- "AKP ile CHP'nin ekonomi politikaları nasıl farklılaşıyor?"
-- "Hangi parti asgari ücreti artırmayı vadediyor?"
-- "MHP'nin göç politikası nedir?"
-
-**🔧 Teknik altyapı:**
-• Multi-Agent RAG mimarisi (LangGraph)
-• Türkçe embedding modeli (BGE-M3)
-• Real-time streaming (SSE)
-• Full-stack: FastAPI + Next.js 15
-
-**🎯 Misyon:**
-Siyasi bilgiye erişimi demokratikleştirmek. Vatandaşların kararlarını tarafsız, doğrulanabilir bilgiye dayanarak vermesini sağlamak.
-
-🔗 github.com/barancanercan/mizan-ai
-
-Açık kaynak. Herkes katkıda bulunabilir.
-
-#AI #MachineLearning #RAG #OpenSource #Türkiye #YapayZeka #Demokrasi #SiyasiBilgi
-
+Har
 ---
 
 ## Kısa Versiyon
