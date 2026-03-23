@@ -83,7 +83,7 @@ export default function Home() {
                   <div className="relative inline-block">
                     <div className="relative">
                       <Image
-                        src="/logo.jpg"
+                        src="/logo.png"
                         alt="MizanAI"
                         width={160}
                         height={160}

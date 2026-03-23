@@ -387,7 +387,7 @@ export default function ChatPage() {
             >
               <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition group">
                 <div className="relative">
-                  <Image src="/logo.jpg" alt="MizanAI" width={36} height={36} className="rounded-xl border border-primary/20" />
+                  <Image src="/logo.png" alt="MizanAI" width={36} height={36} className="rounded-xl border border-primary/20" />
                   <div className="absolute inset-0 rounded-xl bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <span className="font-bold text-lg">MizanAI</span>
@@ -541,7 +541,7 @@ export default function ChatPage() {
                   transition={{ type: "spring", delay: 0.2 }}
                   className="mb-6 relative"
                 >
-                  <Image src="/logo.jpg" alt="MizanAI" width={80} height={80} className="rounded-2xl border-2 border-primary/20 shadow-lg shadow-primary/10" />
+                  <Image src="/logo.png" alt="MizanAI" width={80} height={80} className="rounded-2xl border-2 border-primary/20 shadow-lg shadow-primary/10" />
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -612,7 +612,7 @@ export default function ChatPage() {
                         </div>
                       ) : (
                         <div className="relative">
-                          <Image src="/logo.jpg" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
+                          <Image src="/logo.png" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
                         </div>
                       )}
                     </motion.div>
@@ -694,7 +694,7 @@ export default function ChatPage() {
               className="flex gap-4 items-start"
             >
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-md">
-                <Image src="/logo.jpg" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
+                <Image src="/logo.png" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
               </div>
               <div className="bg-card border border-border p-5 rounded-2xl rounded-tl-md min-w-[200px]">
                 <div className="flex items-center gap-3">

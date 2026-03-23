@@ -45,7 +45,7 @@ export function Footer() {
             >
               <div className="relative">
                 <Image
-                  src="/logo.jpg"
+                  src="/logo.png"
                   alt="MizanAI"
                   width={40}
                   height={40}

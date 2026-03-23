@@ -79,7 +79,7 @@ export default function AboutPage() {
             >
               <div className="relative inline-block mb-6">
                 <Image
-                  src="/logo.jpg"
+                  src="/logo.png"
                   alt="MizanAI"
                   width={120}
                   height={120}
