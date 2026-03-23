@@ -152,16 +152,38 @@ def is_valid_response(text: str) -> bool:
 
 
 def clean_response(text: str) -> str:
-    """Clean and fix response text."""
+    """Clean and fix response text with proper markdown formatting."""
     import re
 
     # Remove Chinese characters
     text = re.sub(r"[\u4e00-\u9fff]", "", text)
-    # Remove multiple spaces
-    text = re.sub(r"\s+", " ", text)
+
     # Remove very long repeated characters
     text = re.sub(r"(.)\1{5,}", r"\1\1\1", text)
-    return text.strip()
+
+    # Fix markdown formatting - add newlines before headers
+    text = re.sub(r"\s*(#{1,3})\s*", r"\n\n\1 ", text)
+
+    # Fix bullet points - add newline before each dash that follows text
+    text = re.sub(r"([.!?:])\s*-\s+", r"\1\n\n- ", text)
+    text = re.sub(r"([a-züğışçöA-ZÜĞİŞÇÖ])\s+-\s+", r"\1\n- ", text)
+
+    # Add newline before "Kaynak:" or "Kaynaklar:"
+    text = re.sub(r"\s*(Kaynak(?:lar)?:)", r"\n\n\1", text)
+
+    # Add double newline between paragraphs (after period followed by capital)
+    text = re.sub(r"\.(\s+)([A-ZÜĞİŞÇÖ])", r".\n\n\2", text)
+
+    # Fix multiple newlines (max 2)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+
+    # Fix multiple spaces
+    text = re.sub(r"[ \t]+", " ", text)
+
+    # Clean up start
+    text = text.strip()
+
+    return text
 
 
 @router.post("/query/stream")
