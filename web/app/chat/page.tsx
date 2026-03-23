@@ -617,30 +617,31 @@ export default function ChatPage() {
                       )}
                     </motion.div>
 
-                    <div className={`max-w-md lg:max-w-2xl ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div className={`${message.role === 'user' ? 'max-w-md lg:max-w-xl' : 'max-w-2xl lg:max-w-4xl'} ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
                       <motion.div
-                        whileHover={{ scale: 1.01 }}
-                        className={`p-4 rounded-2xl ${
+                        whileHover={{ scale: 1.005 }}
+                        className={`rounded-2xl ${
                           message.role === 'user'
-                            ? 'bg-gradient-to-br from-primary to-purple-600 text-white rounded-tr-md'
-                            : 'bg-card border border-border text-foreground rounded-tl-md'
+                            ? 'p-4 bg-gradient-to-br from-primary to-purple-600 text-white rounded-tr-md'
+                            : 'p-5 bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700/50 text-gray-100 rounded-tl-md shadow-lg'
                         }`}
                       >
-                        <div className={`break-words max-w-none ${message.role === 'assistant' ? 'prose prose-invert prose-sm' : ''}`}>
+                        <div className={`break-words max-w-none ${message.role === 'assistant' ? 'text-[15px] leading-[1.8]' : ''}`}>
                           <ReactMarkdown
                             components={{
-                              p: ({ children }) => <p className="mb-3 last:mb-0 leading-relaxed">{children}</p>,
-                              ul: ({ children }) => <ul className="list-disc ml-4 mb-3 space-y-1.5">{children}</ul>,
-                              ol: ({ children }) => <ol className="list-decimal ml-4 mb-3 space-y-1.5">{children}</ol>,
-                              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-                              strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
-                              em: ({ children }) => <em className="italic text-gray-300">{children}</em>,
-                              h1: ({ children }) => <h1 className="text-xl font-bold mb-3 mt-4 first:mt-0 text-white border-b border-white/10 pb-2">{children}</h1>,
-                              h2: ({ children }) => <h2 className="text-lg font-bold mb-2 mt-4 first:mt-0 text-white">{children}</h2>,
-                              h3: ({ children }) => <h3 className="text-base font-semibold mb-2 mt-3 first:mt-0 text-blue-300">{children}</h3>,
-                              code: ({ children }) => <code className="bg-black/30 px-1.5 py-0.5 rounded text-sm text-green-300 font-mono">{children}</code>,
-                              blockquote: ({ children }) => <blockquote className="border-l-4 border-primary pl-4 my-3 italic text-gray-300 bg-black/20 py-2 rounded-r">{children}</blockquote>,
-                              hr: () => <hr className="my-4 border-white/10" />,
+                              p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+                              ul: ({ children }) => <ul className="list-disc ml-5 mb-4 space-y-2">{children}</ul>,
+                              ol: ({ children }) => <ol className="list-decimal ml-5 mb-4 space-y-2">{children}</ol>,
+                              li: ({ children }) => <li className="leading-relaxed pl-1">{children}</li>,
+                              strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                              em: ({ children }) => <em className="italic text-blue-200">{children}</em>,
+                              h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 mt-6 first:mt-0 text-white border-b border-blue-500/30 pb-2">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-xl font-bold mb-3 mt-5 first:mt-0 text-blue-300">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-lg font-semibold mb-2 mt-4 first:mt-0 text-blue-400">{children}</h3>,
+                              code: ({ children }) => <code className="bg-black/40 px-2 py-1 rounded text-sm text-emerald-300 font-mono">{children}</code>,
+                              blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 my-4 text-gray-300 bg-blue-950/30 py-3 rounded-r-lg">{children}</blockquote>,
+                              hr: () => <hr className="my-6 border-slate-600/50" />,
+                              a: ({ href, children }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
                             }}
                           >
                             {message.content}
@@ -697,10 +698,10 @@ export default function ChatPage() {
               <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-md">
                 <Image src="/logo.png" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
               </div>
-              <div className="bg-card border border-border p-5 rounded-2xl rounded-tl-md min-w-[200px]">
+              <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700/50 p-5 rounded-2xl rounded-tl-md min-w-[200px] shadow-lg">
                 <div className="flex items-center gap-3">
                   <TypingIndicator />
-                  <span className="text-sm text-muted-foreground">Araştırıyor...</span>
+                  <span className="text-sm text-gray-400">Araştırıyor...</span>
                 </div>
               </div>
             </motion.div>
