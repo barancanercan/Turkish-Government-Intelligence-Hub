@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageSquare,
   Plus,
@@ -14,8 +15,9 @@ import {
   User,
   Loader2,
   Home,
+  Sparkles,
 } from 'lucide-react';
-import { TypingIndicator } from '@/components/TypingIndicator';
+import { TypingIndicator, MessageSkeleton } from '@/components/Skeleton';
 
 interface Message {
   id: string;
@@ -33,6 +35,16 @@ interface Chat {
   createdAt: string;
 }
 
+// Unique ID generator to prevent duplicate keys
+const generateUniqueId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+const QUICK_QUESTIONS = [
+  'CHP ekonomi politikası',
+  'AKP eğitim programı',
+  'MHP dış politika',
+  'Partileri karşılaştır',
+];
+
 export default function ChatPage() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
@@ -41,12 +53,11 @@ export default function ChatPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-
-  // localStorage işlemleri
   const loadChatsFromStorage = () => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return [];
     try {
       const stored = localStorage.getItem('mizan_chats');
       if (stored) {
@@ -75,7 +86,6 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  // Responsive kontrol
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -89,7 +99,6 @@ export default function ChatPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // İlk yükleme
   useEffect(() => {
     const loadedChats = loadChatsFromStorage();
     setChats(loadedChats);
@@ -99,9 +108,10 @@ export default function ChatPage() {
       setCurrentChatId(lastChat.id);
       setMessages(lastChat.messages);
     }
+    
+    setTimeout(() => setIsInitialLoading(false), 500);
   }, []);
 
-  // Aktif sohbeti yükle
   const loadChat = (chatId: string) => {
     const chat = chats.find((c) => c.id === chatId);
     if (chat) {
@@ -113,10 +123,9 @@ export default function ChatPage() {
     }
   };
 
-  // Yeni sohbet oluştur
   const createNewChat = () => {
     const newChat: Chat = {
-      id: Date.now().toString(),
+      id: generateUniqueId(),
       title: 'Yeni Sohbet',
       messages: [],
       createdAt: new Date().toISOString(),
@@ -132,7 +141,6 @@ export default function ChatPage() {
     }
   };
 
-  // Sohbet sil
   const deleteChat = (chatId: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
     const updatedChats = chats.filter((c) => c.id !== chatId);
@@ -151,11 +159,11 @@ export default function ChatPage() {
     }
   };
 
-  // SSE Stream handler
   const handleStreamMessage = async (userMessage: string, activeChatId: string) => {
     let streamedContent = '';
     let sourcesList: string[] = [];
     let queryType = '';
+    let hasError = false;
 
     try {
       const response = await fetch('/api/chat/stream', {
@@ -164,15 +172,18 @@ export default function ChatPage() {
         body: JSON.stringify({ message: userMessage }),
       });
 
-      if (!response.ok || !response.body) {
-        throw new Error('Stream response error');
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+
+      if (!response.body) {
+        throw new Error('No response body');
       }
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
 
-      // Create assistant message placeholder
-      const assistantMessageId = (Date.now() + 1).toString();
+      const assistantMessageId = generateUniqueId();
       const placeholderMessage: Message = {
         id: assistantMessageId,
         role: 'assistant',
@@ -180,7 +191,6 @@ export default function ChatPage() {
         sources: [],
       };
 
-      // Add placeholder and update UI
       setMessages(prev => [...prev, placeholderMessage]);
 
       while (true) {
@@ -191,55 +201,56 @@ export default function ChatPage() {
         const lines = chunk.split('\n');
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6);
+          if (!line.trim() || !line.startsWith('data: ')) continue;
+          
+          const data = line.slice(6).trim();
+          if (!data) continue;
 
-            if (data === '[DONE]') {
-              // Streaming completed
-              break;
+          if (data === '[DONE]') {
+            break;
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+
+            if (parsed.error) {
+              console.error('Backend error:', parsed.error);
+              hasError = true;
+              streamedContent += `\n\nHata: ${parsed.error}`;
             }
 
-            try {
-              const parsed = JSON.parse(data);
-
-              if (parsed.content) {
-                streamedContent += parsed.content;
-                // Update message in real-time
-                setMessages(prev =>
-                  prev.map(msg =>
-                    msg.id === assistantMessageId
-                      ? { ...msg, content: streamedContent }
-                      : msg
-                  )
-                );
-              }
-
-              if (parsed.sources) {
-                sourcesList = parsed.sources;
-              }
-
-              if (parsed.query_type) {
-                queryType = parsed.query_type;
-              }
-
-              if (parsed.error) {
-                console.error('Stream error:', parsed.error);
-                streamedContent = `Hata: ${parsed.error}`;
-              }
-            } catch (e) {
-              // Ignore JSON parse errors for non-JSON data
+            if (parsed.content) {
+              streamedContent += parsed.content;
+              setMessages(prev =>
+                prev.map(msg =>
+                  msg.id === assistantMessageId
+                    ? { ...msg, content: streamedContent }
+                    : msg
+                )
+              );
             }
+
+            if (parsed.sources && Array.isArray(parsed.sources)) {
+              sourcesList = parsed.sources;
+            }
+
+            if (parsed.query_type) {
+              queryType = parsed.query_type;
+            }
+          } catch (e) {
+            console.warn('Parse error:', e, 'Data:', data);
           }
         }
       }
 
-      // Final update with all metadata
+      const finalContent = streamedContent.trim() || (hasError ? 'İşlem sırasında hata oluştu.' : 'Yanıt alınamadı.');
+      
       setMessages(prev =>
         prev.map(msg =>
           msg.id === assistantMessageId
             ? {
                 ...msg,
-                content: streamedContent || 'Yanıt alınamadı.',
+                content: finalContent,
                 sources: sourcesList,
                 queryType: queryType,
               }
@@ -247,9 +258,8 @@ export default function ChatPage() {
         )
       );
 
-      // Save to storage
       const userMsg: Message = {
-        id: Date.now().toString(),
+        id: generateUniqueId(),
         role: 'user',
         content: userMessage,
       };
@@ -257,7 +267,7 @@ export default function ChatPage() {
       const finalAssistantMsg: Message = {
         id: assistantMessageId,
         role: 'assistant',
-        content: streamedContent || 'Yanıt alınamadı.',
+        content: finalContent,
         sources: sourcesList,
         queryType: queryType,
       };
@@ -277,25 +287,23 @@ export default function ChatPage() {
     } catch (error) {
       console.error('Stream error:', error);
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: generateUniqueId(),
         role: 'assistant',
-        content: 'Bağlantı sorunu yaşandı. Lütfen tekrar deneyin.',
+        content: error instanceof Error ? `Bağlantı sorunu: ${error.message}` : 'Bağlantı sorunu yaşandı. Lütfen tekrar deneyin.',
       };
       setMessages(prev => [...prev, errorMessage]);
     }
   };
 
-  // Mesaj gönder
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const messageText = inputValue;
 
-    // Eğer aktif sohbet yoksa yeni oluştur
     let activeChatId = currentChatId;
     if (!activeChatId) {
       const newChat: Chat = {
-        id: Date.now().toString(),
+        id: generateUniqueId(),
         title: messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText,
         messages: [],
         createdAt: new Date().toISOString(),
@@ -307,9 +315,8 @@ export default function ChatPage() {
       activeChatId = newChat.id;
     }
 
-    // Kullanıcı mesajı ekle
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: generateUniqueId(),
       role: 'user',
       content: messageText,
     };
@@ -319,7 +326,6 @@ export default function ChatPage() {
     setInputValue('');
     setIsLoading(true);
 
-    // Sohbet başlığını güncelle
     let chatTitle = 'Yeni Sohbet';
     if (messages.length === 0 && messageText.length > 50) {
       chatTitle = messageText.substring(0, 50) + '...';
@@ -327,7 +333,6 @@ export default function ChatPage() {
       chatTitle = messageText;
     }
 
-    // Update chat title
     setChats(prevChats => {
       const updatedChats = prevChats.map(c =>
         c.id === activeChatId
@@ -342,7 +347,6 @@ export default function ChatPage() {
       return updatedChats;
     });
 
-    // Use streaming endpoint
     try {
       await handleStreamMessage(messageText, activeChatId);
     } finally {
@@ -350,262 +354,369 @@ export default function ChatPage() {
     }
   };
 
-  // Mevcut sohbet
   const currentChat = chats.find((c) => c.id === currentChatId);
 
   return (
-    <div className="flex h-screen bg-[#0a0a0a] text-white">
-      {/* Sidebar Overlay (Mobil) */}
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {isMobile && isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed md:static top-0 left-0 h-screen w-64 bg-[#141414] border-r border-gray-800 flex flex-col transition-transform duration-300 z-50 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        }`}
-      >
-        {/* Logo / Başlık */}
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
-            <Image src="/logo.png" alt="MizanAI" width={32} height={32} className="rounded-lg" />
-            <h1 className="font-bold text-lg">MizanAI</h1>
-          </Link>
-          {isMobile && (
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="md:hidden p-1 hover:bg-gray-700 rounded"
-            >
-              <X size={20} />
-            </button>
-          )}
-        </div>
-
-        {/* Yeni Sohbet Butonu */}
-        <div className="p-4">
-          <button
-            onClick={createNewChat}
-            className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-medium transition-colors"
+      <AnimatePresence mode="wait">
+        {isSidebarOpen && (
+          <motion.aside
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className={`fixed md:static top-0 left-0 h-screen w-72 bg-card border-r border-border flex flex-col z-50 ${
+              isMobile ? 'shadow-2xl' : ''
+            }`}
           >
-            <Plus size={20} />
-            Yeni Sohbet
-          </button>
-        </div>
-
-        {/* Sohbet Listesi */}
-        <div className="flex-1 overflow-y-auto">
-          {chats.length === 0 ? (
-            <div className="p-4 text-center text-gray-400 text-sm">
-              Henüz sohbet yok. Yeni sohbet oluşturun.
-            </div>
-          ) : (
-            <div className="space-y-2 p-2">
-              {chats.map((chat) => (
-                <div
-                  key={chat.id}
-                  onClick={() => loadChat(chat.id)}
-                  className={`w-full text-left p-3 rounded-lg transition-colors flex items-start justify-between group cursor-pointer ${
-                    currentChatId === chat.id
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-[#1a1a1a] hover:bg-gray-700 text-gray-300'
-                  }`}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {chat.title}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(chat.createdAt).toLocaleDateString('tr-TR')}
-                    </p>
-                  </div>
-                  <button
-                    onClick={(e) => deleteChat(chat.id, e)}
-                    className="ml-2 p-1 opacity-0 group-hover:opacity-100 hover:bg-red-600/20 rounded transition-all"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="p-4 border-b border-border"
+            >
+              <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition group">
+                <div className="relative">
+                  <Image src="/logo.png" alt="MizanAI" width={36} height={36} className="rounded-xl border border-primary/20" />
+                  <div className="absolute inset-0 rounded-xl bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                <span className="font-bold text-lg">MizanAI</span>
+              </Link>
+              {isMobile && (
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="absolute right-4 top-4 p-1 hover:bg-muted rounded-lg transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              )}
+            </motion.div>
 
-      </aside>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.15 }}
+              className="p-4"
+            >
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={createNewChat}
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 py-3 px-4 rounded-xl font-medium transition-all shadow-lg shadow-primary/20"
+              >
+                <Plus size={20} />
+                Yeni Sohbet
+              </motion.button>
+            </motion.div>
 
-      {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col bg-[#1a1a1a]">
-        {/* Header */}
-        <header className="border-b border-gray-800 p-4 flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="flex-1 overflow-y-auto"
+            >
+              {isInitialLoading ? (
+                <div className="p-4 space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="p-3 rounded-xl bg-muted/30"
+                    >
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2 animate-pulse" />
+                      <div className="h-3 bg-muted rounded w-1/3 animate-pulse" />
+                    </motion.div>
+                  ))}
+                </div>
+              ) : chats.length === 0 ? (
+                <div className="p-4 text-center text-muted-foreground text-sm">
+                  Henüz sohbet yok. Yeni sohbet oluşturun.
+                </div>
+              ) : (
+                <div className="space-y-2 p-2">
+                  {chats.map((chat, index) => (
+                    <motion.div
+                      key={chat.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={() => loadChat(chat.id)}
+                      className={`w-full text-left p-3 rounded-xl transition-all duration-200 flex items-start justify-between group cursor-pointer ${
+                        currentChatId === chat.id
+                          ? 'bg-primary/10 text-primary border border-primary/20'
+                          : 'bg-muted/30 hover:bg-muted/50 text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">
+                          {chat.title}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(chat.createdAt).toLocaleDateString('tr-TR')}
+                        </p>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => deleteChat(chat.id, e)}
+                        className="ml-2 p-1.5 opacity-0 group-hover:opacity-100 hover:bg-destructive/20 rounded-lg transition-all"
+                      >
+                        <Trash2 size={16} />
+                      </motion.button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex-1 flex flex-col bg-background"
+      >
+        <motion.header
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="border-b border-border p-4 flex items-center justify-between bg-card/50 backdrop-blur-sm"
+        >
           <div className="flex items-center gap-4">
             {isMobile && (
-              <button
+              <motion.button
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2 hover:bg-gray-700 rounded md:hidden"
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
               >
                 <Menu size={24} />
-              </button>
+              </motion.button>
             )}
             <div>
-              <h2 className="text-xl font-bold">
+              <h2 className="text-lg font-semibold">
                 {currentChat?.title || 'Sohbet Seçin'}
               </h2>
               {currentChat && (
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {currentChat.messages.length} mesaj
                 </p>
               )}
             </div>
           </div>
 
-          {/* Ana Sayfa Linki */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition-colors"
-          >
-            <Home size={16} />
-            <span className="hidden sm:inline">Ana Sayfa</span>
-          </Link>
-        </header>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg text-sm transition-colors"
+            >
+              <Home size={16} />
+              <span className="hidden sm:inline">Ana Sayfa</span>
+            </Link>
+          </motion.div>
+        </motion.header>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="max-w-4xl mx-auto space-y-6">
-          {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-gray-400">
-              <div className="mb-6">
-                <Image src="/logo.png" alt="MizanAI" width={80} height={80} />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">MizanAI Asistan</h3>
-              <p className="text-sm text-center max-w-md mb-6">
-                Turk siyasi partileri hakkinda sorular sorun. CHP, AKP, MHP, IYI, DEM, SP, ZP, BBP hakkinda bilgi alabilirsiniz.
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-                {['CHP ekonomi politikasi', 'AKP egitim programi', 'MHP dis politika', 'Partileri karsilastir'].map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => setInputValue(q)}
-                    className="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm transition-colors"
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <>
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex gap-4 ${
-                    message.role === 'user' ? 'flex-row-reverse' : ''
-                  }`}
+            {messages.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="h-full flex flex-col items-center justify-center text-center py-12"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", delay: 0.2 }}
+                  className="mb-6 relative"
                 >
-                  {/* Avatar */}
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    {message.role === 'user' ? (
-                      <div className="w-full h-full bg-blue-600 flex items-center justify-center">
-                        <User size={18} />
-                      </div>
-                    ) : (
-                      <Image src="/logo.png" alt="AI" width={32} height={32} />
-                    )}
-                  </div>
-
-                  {/* Mesaj Içeriği */}
-                  <div
-                    className={`max-w-md lg:max-w-2xl ${
+                  <Image src="/logo.png" alt="MizanAI" width={80} height={80} className="rounded-2xl border-2 border-primary/20 shadow-lg shadow-primary/10" />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/30 to-purple-500/30 blur-lg"
+                  />
+                </motion.div>
+                
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-xl font-bold mb-2"
+                >
+                  MizanAI Asistan
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-muted-foreground text-sm max-w-md mb-6"
+                >
+                  Türk siyasi partileri hakkında sorular sorun. CHP, AKP, MHP, İYİ, DEM, SP, ZP, BBP hakkında bilgi alabilirsiniz.
+                </motion.p>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="flex flex-wrap gap-2 justify-center max-w-lg"
+                >
+                  {QUICK_QUESTIONS.map((q, i) => (
+                    <motion.button
+                      key={q}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 + i * 0.05 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setInputValue(q)}
+                      className="px-4 py-2 bg-muted/50 hover:bg-muted hover:border-primary/30 border border-transparent rounded-lg text-sm transition-all"
+                    >
+                      {q}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              </motion.div>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {messages.map((message, index) => (
+                  <motion.div
+                    key={message.id}
+                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className={`flex gap-4 ${
                       message.role === 'user' ? 'flex-row-reverse' : ''
                     }`}
                   >
-                    <div
-                      className={`p-4 rounded-lg ${
-                        message.role === 'user'
-                          ? 'bg-blue-600 text-white rounded-tr-none'
-                          : 'bg-gray-800 text-gray-100 rounded-tl-none'
-                      }`}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.1 }}
+                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-md"
                     >
-                      <div className="break-words prose prose-invert prose-sm max-w-none">
-                        <ReactMarkdown
-                          components={{
-                            p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                            ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
-                            ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
-                            li: ({ children }) => <li className="text-gray-100">{children}</li>,
-                            strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
-                            em: ({ children }) => <em className="italic">{children}</em>,
-                            h1: ({ children }) => <h1 className="text-xl font-bold mb-2 text-white">{children}</h1>,
-                            h2: ({ children }) => <h2 className="text-lg font-bold mb-2 text-white">{children}</h2>,
-                            h3: ({ children }) => <h3 className="text-base font-bold mb-1 text-white">{children}</h3>,
-                            code: ({ children }) => <code className="bg-gray-700 px-1 rounded text-sm">{children}</code>,
-                            blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-3 italic text-gray-300">{children}</blockquote>,
-                          }}
-                        >
-                          {message.content}
-                        </ReactMarkdown>
-                      </div>
-                    </div>
+                      {message.role === 'user' ? (
+                        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                          <User size={18} className="text-white" />
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <Image src="/logo.png" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
+                        </div>
+                      )}
+                    </motion.div>
 
-                    {/* Metadata (Asistan Mesajları İçin) */}
-                    {message.role === 'assistant' && (
-                      <div className="mt-2 text-xs text-gray-500 space-y-1">
-                        {message.queryType && (
-                          <p>Sorgu Tipi: {message.queryType}</p>
-                        )}
-                        {message.qualityScore && (
-                          <p>Kalite Puanı: {message.qualityScore}%</p>
-                        )}
-                        {message.sources && message.sources.length > 0 && (
-                          <div>
-                            <p className="font-medium text-gray-400 mb-1">
-                              Kaynaklar:
+                    <div className={`max-w-md lg:max-w-2xl ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+                      <motion.div
+                        whileHover={{ scale: 1.01 }}
+                        className={`p-4 rounded-2xl ${
+                          message.role === 'user'
+                            ? 'bg-gradient-to-br from-primary to-purple-600 text-white rounded-tr-md'
+                            : 'bg-card border border-border text-foreground rounded-tl-md'
+                        }`}
+                      >
+                        <div className="break-words prose prose-invert prose-sm max-w-none">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                              ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
+                              ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
+                              li: ({ children }) => <li className="text-inherit">{children}</li>,
+                              strong: ({ children }) => <strong className="font-bold text-inherit">{children}</strong>,
+                              em: ({ children }) => <em className="italic">{children}</em>,
+                              h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-base font-bold mb-1">{children}</h3>,
+                              code: ({ children }) => <code className="bg-muted px-1.5 py-0.5 rounded text-sm">{children}</code>,
+                              blockquote: ({ children }) => <blockquote className="border-l-4 border-primary/50 pl-3 italic text-muted-foreground">{children}</blockquote>,
+                            }}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      </motion.div>
+
+                      {message.role === 'assistant' && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.2 }}
+                          className="mt-3 text-xs text-muted-foreground space-y-2"
+                        >
+                          {message.queryType && (
+                            <p className="flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" />
+                              Sorgu Tipi: {message.queryType}
                             </p>
+                          )}
+                          {message.sources && message.sources.length > 0 && (
                             <div className="flex flex-wrap gap-2">
                               {message.sources.map((source, idx) => {
-                                // Sadece dosya adini goster
                                 const fileName = source.split(/[/\\]/).pop() || source;
                                 const partyName = fileName.replace('.pdf', '').toUpperCase();
                                 return (
-                                  <span
+                                  <motion.span
                                     key={idx}
-                                    className="inline-flex items-center px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs"
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: idx * 0.05 }}
+                                    className="inline-flex items-center px-2.5 py-1 bg-primary/10 text-primary rounded-md"
                                   >
                                     {partyName}
-                                  </span>
+                                  </motion.span>
                                 );
                               })}
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            )}
 
-              {/* Yükleme Göstergesi */}
-              {isLoading && (
-                <div className="flex gap-4 items-center">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    <Image src="/logo.png" alt="AI" width={32} height={32} />
-                  </div>
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex gap-4 items-start"
+            >
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden shadow-md">
+                <Image src="/logo.png" alt="AI" width={36} height={36} className="rounded-lg border border-primary/20" />
+              </div>
+              <div className="bg-card border border-border p-5 rounded-2xl rounded-tl-md min-w-[200px]">
+                <div className="flex items-center gap-3">
                   <TypingIndicator />
+                  <span className="text-sm text-muted-foreground">Araştırıyor...</span>
                 </div>
-              )}
-
-              <div ref={messagesEndRef} />
-            </>
+              </div>
+            </motion.div>
           )}
+
+            <div ref={messagesEndRef} />
           </div>
         </div>
 
-        {/* Input Area */}
-        <div className="border-t border-gray-800 p-4">
-          <div className="flex gap-2 max-w-4xl mx-auto">
-            <input
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="border-t border-border p-4 bg-card/50 backdrop-blur-sm"
+        >
+          <div className="flex gap-3 max-w-4xl mx-auto">
+            <motion.input
+              whileFocus={{ scale: 1.01 }}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -617,22 +728,24 @@ export default function ChatPage() {
               }}
               placeholder="Mesaj yazın..."
               disabled={isLoading}
-              className="flex-1 bg-[#0a0a0a] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+              className="flex-1 bg-muted/50 border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 disabled:opacity-50 transition-all"
             />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={handleSendMessage}
               disabled={isLoading || !inputValue.trim()}
-              className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
+              className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 disabled:opacity-50 disabled:cursor-not-allowed px-5 py-3 rounded-xl font-medium transition-all shadow-lg shadow-primary/20 flex items-center justify-center"
             >
               {isLoading ? (
                 <Loader2 size={20} className="animate-spin" />
               ) : (
                 <Send size={20} />
               )}
-            </button>
+            </motion.button>
           </div>
-        </div>
-      </main>
+        </motion.div>
+      </motion.main>
     </div>
   );
 }

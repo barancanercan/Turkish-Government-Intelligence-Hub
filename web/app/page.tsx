@@ -2,200 +2,400 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Brain, FileText, MessageSquare, Sparkles, Users } from "lucide-react";
+import { motion } from "framer-motion";
+import { Brain, FileText, MessageSquare, Sparkles, Users, ArrowRight, Scale } from "lucide-react";
 import { Navbar } from "@/components";
 import { Footer } from "@/components";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { StaggerContainer, StaggerItem } from "@/components/Animated";
 
 const PARTIES = [
-  { id: "CHP", name: "Cumhuriyet Halk Partisi", color: "#FF0000" },
-  { id: "AKP", name: "Adalet ve Kalkınma Partisi", color: "#E55100" },
-  { id: "MHP", name: "Milliyetçi Hareket Partisi", color: "#0066FF" },
-  { id: "İYİ", name: "İYİ Parti", color: "#FFD700" },
-  { id: "DEM", name: "Halkların Eşitlik ve Demokrasi Partisi", color: "#9933FF" },
-  { id: "SP", name: "Saadet Partisi", color: "#00AA00" },
-  { id: "ZP", name: "Zafer Partisi", color: "#1e3a5f" },
-  { id: "BBP", name: "Büyük Birlik Partisi", color: "#CC0000" },
+  { id: "CHP", name: "Cumhuriyet Halk Partisi", color: "#FF0000", shortName: "CHP" },
+  { id: "AKP", name: "Adalet ve Kalkınma Partisi", color: "#E55100", shortName: "AKP" },
+  { id: "MHP", name: "Milliyetçi Hareket Partisi", color: "#0066FF", shortName: "MHP" },
+  { id: "İYİ", name: "İYİ Parti", color: "#FFD700", shortName: "İYİ" },
+  { id: "DEM", name: "Halkların Eşitlik ve Demokrasi Partisi", color: "#9933FF", shortName: "DEM" },
+  { id: "SP", name: "Saadet Partisi", color: "#00AA00", shortName: "SP" },
+  { id: "ZP", name: "Zafer Partisi", color: "#1e3a5f", shortName: "ZP" },
+  { id: "BBP", name: "Büyük Birlik Partisi", color: "#CC0000", shortName: "BBP" },
+];
+
+const FEATURES = [
+  {
+    icon: Brain,
+    title: "Multi-Agent Sistem",
+    description: "LangGraph ile güçlendirilmiş akıllı ajanlar, karmaşık siyasi soruları analiz etmek için koordineli çalışır.",
+    color: "blue",
+  },
+  {
+    icon: Users,
+    title: "8 Siyasi Parti",
+    description: "Tüm partilerin tüzük, program ve resmi belgelerinin tam veritabanında arama yapın.",
+    color: "purple",
+  },
+  {
+    icon: FileText,
+    title: "Kaynak Gösterimli",
+    description: "Her yanıta doğrulanabilir kaynaklar eşlik eder. Bilginin nereden geldiğini her zaman görün.",
+    color: "green",
+  },
+  {
+    icon: Scale,
+    title: "Tarafsız Analiz",
+    description: "Objectif ve dengeli karşılaştırmalar ile partilerin pozisyonlarını yanlışsız değerlendirin.",
+    color: "orange",
+  },
+];
+
+const STATS = [
+  { value: "8+", label: "Siyasi Parti", color: "text-blue-500" },
+  { value: "1000+", label: "Analiz Edilen Belge", color: "text-purple-500" },
+  { value: "100%", label: "Kaynaklandırılmış", color: "text-green-500" },
+  { value: "Real-time", label: "AI Analiz", color: "text-pink-500" },
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <Navbar />
+      <ScrollToTop />
 
-      {/* Hero Section */}
-      <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="mb-8">
-            <Image src="/logo.png" alt="MizanAI" width={120} height={120} className="mx-auto" />
+      <main>
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center justify-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+          {/* Animated Background */}
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+            <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
+            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] animate-pulse-glow" style={{ animationDelay: "1s" }} />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/50" />
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
-            MizanAI
-          </h1>
+          <div className="max-w-6xl mx-auto text-center relative z-10">
+            <StaggerContainer delay={0.1}>
+              <StaggerItem>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6 }}
+                  className="mb-8"
+                >
+                  <div className="relative inline-block">
+                    <div className="relative">
+                      <Image
+                        src="/logo.png"
+                        alt="MizanAI"
+                        width={160}
+                        height={160}
+                        className="mx-auto rounded-2xl border-2 border-primary/30 shadow-2xl shadow-primary/20"
+                        priority
+                      />
+                      <motion.div
+                        animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/40 via-purple-500/20 to-transparent"
+                      />
+                    </div>
+                    <motion.div
+                      animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+                      transition={{ duration: 4, repeat: Infinity }}
+                      className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-primary/20 via-purple-500/10 to-blue-500/20 blur-2xl -z-10"
+                    />
+                  </div>
+                </motion.div>
+              </StaggerItem>
 
-          <p className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Türkiye'nin ilk yapay zeka destekli siyasi belge analiz platformu
-          </p>
+              <StaggerItem>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6"
+                >
+                  <span className="relative">
+                    <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-primary via-purple-500 to-blue-500 opacity-30 rounded-lg" />
+                    <span className="relative bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+                      MizanAI
+                    </span>
+                  </span>
+                </motion.h1>
+              </StaggerItem>
 
-          <p className="text-gray-400 mb-10 max-w-2xl mx-auto">
-            Multi-agent sistemimiz ile siyasi partilerin tüzük, program ve belgelerini analiz edin.
-            Doğrulanabilir kaynaklar ile güvenilir bilgi alın.
-          </p>
+              <StaggerItem>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.25 }}
+                  className="flex justify-center mb-4"
+                >
+                  <a
+                    href="https://github.com/barancanercan/mizan-ai"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 bg-card/50 border border-border rounded-full text-sm text-gray-400 hover:text-white hover:border-primary/50 transition-all"
+                  >
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    Open Source on GitHub
+                  </a>
+                </motion.div>
+              </StaggerItem>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link
-              href="/chat"
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition transform hover:scale-105"
+              <StaggerItem>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="text-xl sm:text-2xl text-gray-300 mb-6 max-w-3xl mx-auto leading-relaxed"
+                >
+                  Türkiye'nin yapay zeka destekli siyasi belge analiz platformu
+                </motion.p>
+              </StaggerItem>
+
+              <StaggerItem>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="text-gray-400 mb-10 max-w-2xl mx-auto text-lg"
+                >
+                  Multi-agent sistemimiz ile siyasi partilerin tüzük, program ve belgelerini analiz edin.
+                  Doğrulanabilir kaynaklar ile güvenilir bilgi alın.
+                </motion.p>
+              </StaggerItem>
+
+              <StaggerItem>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+                >
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Link
+                      href="/chat"
+                      className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary to-purple-600 rounded-xl font-semibold text-white shadow-lg shadow-primary/25 hover:shadow-glow-md transition-all duration-300 group"
+                    >
+                      <MessageSquare className="w-5 h-5 group-hover:animate-pulse" />
+                      Sohbete Başla
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Link
+                      href="/about"
+                      className="inline-flex items-center gap-2 px-8 py-4 border border-border rounded-xl font-semibold text-gray-300 hover:text-white hover:border-gray-500 hover:bg-secondary/50 transition-all duration-200"
+                    >
+                      Hakkımızda
+                    </Link>
+                  </motion.div>
+                </motion.div>
+              </StaggerItem>
+
+              {/* Scroll Indicator removed - was showing as "0" */}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          </div>
+          
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
             >
-              <MessageSquare className="w-5 h-5 inline mr-2" />
-              Sohbete Başla
-            </Link>
-            <Link
-              href="/about"
-              className="px-8 py-4 border border-gray-600 rounded-lg font-semibold hover:border-gray-400 transition"
+              <h2 className="text-4xl sm:text-5xl font-bold mb-4">Neden MİZAN-AI?</h2>
+              <p className="text-gray-400 text-lg">En gelişmiş siyasi analiz araçları</p>
+            </motion.div>
+
+            <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" delay={0.1}>
+              {FEATURES.map((feature) => (
+                <StaggerItem key={feature.title}>
+                  <motion.div
+                    whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                    className="group relative p-8 rounded-2xl border border-border bg-card/50 hover:bg-card hover:border-primary/30 transition-all duration-300 h-full flex flex-col"
+                  >
+                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
+                      feature.color === 'blue' ? 'from-primary/5 to-transparent' :
+                      feature.color === 'purple' ? 'from-purple-500/5 to-transparent' :
+                      feature.color === 'green' ? 'from-green-500/5 to-transparent' :
+                      'from-orange-500/5 to-transparent'
+                    } opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+
+                    <div className={`relative inline-flex items-center justify-center w-14 h-14 rounded-xl mb-5 ${
+                      feature.color === 'blue' ? 'bg-blue-500/10 text-blue-500' :
+                      feature.color === 'purple' ? 'bg-purple-500/10 text-purple-500' :
+                      feature.color === 'green' ? 'bg-green-500/10 text-green-500' :
+                      'bg-orange-500/10 text-orange-500'
+                    }`}>
+                      <feature.icon className="w-7 h-7" />
+                    </div>
+
+                    <h3 className="relative text-lg font-bold mb-3 text-foreground group-hover:text-white transition-colors">
+                      {feature.title}
+                    </h3>
+                    <p className="relative text-gray-400 text-sm leading-relaxed flex-grow">
+                      {feature.description}
+                    </p>
+
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${
+                        feature.color === 'blue' ? 'from-blue-500 to-cyan-400' :
+                        feature.color === 'purple' ? 'from-purple-500 to-pink-500' :
+                        feature.color === 'green' ? 'from-green-500 to-emerald-400' :
+                        'from-orange-500 to-amber-400'
+                      } origin-left rounded-full`}
+                    />
+                  </motion.div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+
+        {/* Parties Section */}
+        <section id="parties" className="py-24 px-4 sm:px-6 lg:px-8 relative">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[120px]" />
+          </div>
+
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
             >
-              Hakkımızda
-            </Link>
-          </div>
+              <h2 className="text-4xl sm:text-5xl font-bold mb-4">Desteklenen Partiler</h2>
+              <p className="text-gray-400 text-lg">8 siyasi partinin tüzük ve programlarına erişin</p>
+            </motion.div>
 
-          {/* Scroll indicator */}
-          <div className="animate-bounce flex justify-center">
-            <svg
-              className="w-6 h-6 text-gray-500"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+              {PARTIES.map((party, index) => (
+                <motion.div
+                  key={party.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                >
+                  <Link href={`/chat?party=${party.id}`} className="group block">
+                    <motion.div
+                      whileHover={{ y: -8, scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="relative p-4 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-opacity-100 transition-all duration-300 text-center"
+                      style={{ borderColor: `${party.color}40` }}
+                    >
+                      <div
+                        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ background: `linear-gradient(135deg, ${party.color}10 0%, transparent 100%)` }}
+                      />
+                      <div
+                        className="relative w-14 h-14 mx-auto rounded-xl flex items-center justify-center text-xl font-bold mb-3 transition-transform group-hover:scale-110"
+                        style={{
+                          backgroundColor: `${party.color}15`,
+                          color: party.color,
+                          boxShadow: `0 4px 20px ${party.color}20`
+                        }}
+                      >
+                        {party.shortName}
+                      </div>
+                      <p className="relative text-xs text-gray-400 group-hover:text-gray-300 transition-colors line-clamp-2 min-h-[32px]">
+                        {party.name}
+                      </p>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+          
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {STATS.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="text-center"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 + 0.2, type: "spring" }}
+                    className={`text-4xl sm:text-5xl font-bold mb-2 ${stat.color}`}
+                  >
+                    {stat.value}
+                  </motion.div>
+                  <p className="text-gray-400 text-sm">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section id="cta" className="py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="relative overflow-hidden rounded-3xl p-12 text-center"
             >
-              <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-[#0f0f0f]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Neden MİZAN-AI?</h2>
-            <p className="text-gray-400 text-lg">En gelişmiş siyasi analiz araçları</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="group p-8 rounded-xl border border-[#262626] bg-[#0f0f0f] hover:border-blue-500/50 hover:bg-[#1a1a2e] transition transform hover:scale-105">
-              <div className="mb-4 inline-block p-3 rounded-lg bg-blue-500/10">
-                <Brain className="w-8 h-8 text-blue-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-purple-500/20" />
+              <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-purple-500/5" />
+              
+              <div className="relative z-10">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/20 text-primary mb-6"
+                >
+                  <Sparkles className="w-8 h-8" />
+                </motion.div>
+                
+                <h2 className="text-4xl sm:text-5xl font-bold mb-4">Hemen Deneyin</h2>
+                <p className="text-gray-300 text-lg mb-8 max-w-xl mx-auto">
+                  Türk siyasi partileri hakkında merak ettiklerinizi sorun. Akıllı ajanlarımız anında cevaplasın.
+                </p>
+                
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    href="/chat"
+                    className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-primary to-purple-600 rounded-xl font-semibold text-white shadow-lg shadow-primary/25 hover:shadow-glow-md transition-all duration-300 group"
+                  >
+                    <Sparkles className="w-5 h-5 group-hover:animate-pulse" />
+                    Sohbete Başla
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
               </div>
-              <h3 className="text-xl font-bold mb-3">Multi-Agent Sistem</h3>
-              <p className="text-gray-400">
-                LangGraph ile güçlendirilmiş akıllı ajanlar, karmaşık siyasi soruları analiz etmek için koordineli çalışır.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="group p-8 rounded-xl border border-[#262626] bg-[#0f0f0f] hover:border-purple-500/50 hover:bg-[#1a1a2e] transition transform hover:scale-105">
-              <div className="mb-4 inline-block p-3 rounded-lg bg-purple-500/10">
-                <Users className="w-8 h-8 text-purple-500" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">8 Siyasi Parti</h3>
-              <p className="text-gray-400">
-                Tüm partilerin tüzük, program ve resmi belgelerinin tam veritabanında arama yapın.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="group p-8 rounded-xl border border-[#262626] bg-[#0f0f0f] hover:border-green-500/50 hover:bg-[#1a1a2e] transition transform hover:scale-105">
-              <div className="mb-4 inline-block p-3 rounded-lg bg-green-500/10">
-                <FileText className="w-8 h-8 text-green-500" />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Kaynak Gösterimli</h3>
-              <p className="text-gray-400">
-                Her yanıta doğrulanabilir kaynaklar eşlik eder. Bilginin nereden geldiğini her zaman görün.
-              </p>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      </section>
-
-      {/* Parties Section */}
-      <section id="parties" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Erişilebilir Partiler</h2>
-            <p className="text-gray-400 text-lg">Türkiye'nin tüm ana siyasi partileri</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {PARTIES.map((party) => (
-              <Link
-                key={party.id}
-                href={`/chat?party=${party.id}`}
-                className="group p-6 rounded-xl border border-[#262626] bg-[#0f0f0f] hover:border-opacity-100 transition transform hover:scale-105 flex flex-col items-center text-center"
-                style={{
-                  borderColor: party.color + "40",
-                  backgroundColor: party.color + "08",
-                }}
-              >
-                <div
-                  className="w-12 h-12 rounded-lg mb-4 group-hover:shadow-lg transition"
-                  style={{
-                    backgroundColor: party.color + "20",
-                    borderLeft: `3px solid ${party.color}`,
-                  }}
-                />
-                <h3 className="font-bold text-sm">{party.id}</h3>
-                <p className="text-xs text-gray-500 mt-1">{party.name}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-transparent to-[#0f0f0f]">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-blue-500 mb-2">8+</div>
-              <p className="text-gray-400">Siyasi Parti</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-purple-500 mb-2">1000+</div>
-              <p className="text-gray-400">Analiz Edilen Belge</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-500 mb-2">100%</div>
-              <p className="text-gray-400">Kaynaklandırılmış</p>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-pink-500 mb-2">Real-time</div>
-              <p className="text-gray-400">AI Analiz</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section id="cta" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-2xl p-12 text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Hemen Deneyin</h2>
-            <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-              Türk siyasi partileri hakkında merak ettiklerinizi sorun. Akıllı ajanlarımız anında cevapla...
-            </p>
-            <Link
-              href="/chat"
-              className="inline-block px-10 py-4 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition transform hover:scale-105"
-            >
-              <Sparkles className="w-5 h-5 inline mr-2" />
-              Sohbete Başla
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       <Footer />
     </div>

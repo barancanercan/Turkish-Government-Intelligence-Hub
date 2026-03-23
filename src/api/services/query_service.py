@@ -25,10 +25,12 @@ class QueryService:
         """Lazy initialization of vectorstore and LLM."""
         if self.vectorstore is None:
             from src.core.cache import get_vectorstore
+
             self.vectorstore = get_vectorstore()
 
         if self.llm is None:
             from src.core.llm_setup import create_llm_handler
+
             self.llm, self.llm_type = create_llm_handler(party)
 
     async def process_query(
@@ -88,10 +90,7 @@ class QueryService:
             needs_web = any(sq.requires_web for sq in query_analysis.sub_questions)
             logger.info(f"Query analysis: {len(query_analysis.sub_questions)} alt soru, web_needed={needs_web}")
 
-            # 4. Initialize LLM with correct party
-            self._ensure_initialized(target_party)
-
-            # 5. Local knowledge search with CORRECT party
+            # 4. Local knowledge search with CORRECT party
             vectorstore = get_vectorstore()
             filter_meta = {"party": target_party}
             docs = vectorstore.similarity_search(question, k=top_k, filter=filter_meta)
@@ -99,10 +98,9 @@ class QueryService:
             local_context = ""
             local_sources = []
             if docs:
-                local_context = "\n\n".join([
-                    f"[{doc.metadata.get('party', target_party)}]: {doc.page_content[:500]}"
-                    for doc in docs[:3]
-                ])
+                local_context = "\n\n".join(
+                    [f"[{doc.metadata.get('party', target_party)}]: {doc.page_content[:500]}" for doc in docs[:3]]
+                )
                 local_sources = [doc.metadata.get("source", "") for doc in docs]
                 logger.info(f"Local search: {len(docs)} doküman bulundu ({target_party})")
 
@@ -117,11 +115,7 @@ class QueryService:
 
                 if search_result.has_results:
                     # 7. SYNTHESIZE web results - extract facts, filter noise
-                    synth_context = synthesizer.synthesize(
-                        search_result.results,
-                        question,
-                        target_party
-                    )
+                    synth_context = synthesizer.synthesize(search_result.results, question, target_party)
 
                     web_context = synth_context.to_prompt_context()
                     web_sources = synth_context.sources
@@ -154,6 +148,7 @@ YANIT:"""
 
             # Invoke LLM - Ana model (main) kullan
             from src.core.llm_setup import get_ollama_model
+
             direct_llm = get_ollama_model("main")
 
             answer = str(direct_llm.invoke(system_prompt))
@@ -196,6 +191,7 @@ YANIT:"""
             from src.core.parties import normalize_party_name
             from src.core.cache import get_vectorstore
             from src.core.llm_setup import create_llm_handler
+
             vectorstore = get_vectorstore()
             llm, llm_type = create_llm_handler(parties[0])
 
@@ -206,17 +202,13 @@ YANIT:"""
                 normalized = normalize_party_name(party)
 
                 # Full pipeline search for each party
-                local_context, docs, scores = search_local_knowledge(
-                    vectorstore, question, normalized, top_k
-                )
+                local_context, docs, scores = search_local_knowledge(vectorstore, question, normalized, top_k)
 
                 party_positions[normalized] = local_context[:800] if local_context else "Bilgi bulunamadı"
                 all_sources.extend([doc.metadata.get("source", "") for doc in docs])
 
             # Build comparison prompt
-            party_contexts = "\n\n".join([
-                f"=== {p} ===\n{pos}" for p, pos in party_positions.items()
-            ])
+            party_contexts = "\n\n".join([f"=== {p} ===\n{pos}" for p, pos in party_positions.items()])
 
             comparison_prompt = f"""Sen Türk siyasi partileri uzmanısın. Aşağıdaki parti belgelerini karşılaştır.
 

@@ -12,9 +12,12 @@ import asyncio
 import json
 
 from ..schemas import (
-    QueryRequest, QueryResponse,
-    CompareRequest, CompareResponse,
-    AnalyzeRequest, AnalyzeResponse,
+    QueryRequest,
+    QueryResponse,
+    CompareRequest,
+    CompareResponse,
+    AnalyzeRequest,
+    AnalyzeResponse,
 )
 from ..services.query_service import QueryService
 from ..middleware.auth import get_current_user, verify_api_key
@@ -34,7 +37,7 @@ async def query(
     Query endpoint for simple questions.
     """
     start_time = time.time()
-    
+
     try:
         service = QueryService()
         result = await service.process_query(
@@ -43,9 +46,9 @@ async def query(
             top_k=request.top_k,
             user_id=user_id,
         )
-        
+
         latency_ms = (time.time() - start_time) * 1000
-        
+
         return QueryResponse(
             answer=result.get("answer", ""),
             sources=result.get("sources", []),
@@ -53,7 +56,7 @@ async def query(
             query_type=result.get("query_type", "simple"),
             latency_ms=latency_ms,
         )
-        
+
     except Exception as e:
         logger.error(f"Query error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -68,7 +71,7 @@ async def compare(
     Compare endpoint for party comparisons.
     """
     start_time = time.time()
-    
+
     try:
         service = QueryService()
         result = await service.process_comparison(
@@ -77,16 +80,16 @@ async def compare(
             top_k=request.top_k,
             user_id=user_id,
         )
-        
+
         latency_ms = (time.time() - start_time) * 1000
-        
+
         return CompareResponse(
             comparison=result.get("comparison", ""),
             party_positions=result.get("party_positions", {}),
             sources=result.get("sources", []),
             latency_ms=latency_ms,
         )
-        
+
     except Exception as e:
         logger.error(f"Compare error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -126,6 +129,45 @@ async def analyze(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def is_valid_response(text: str) -> bool:
+    """Check if response is valid (not garbage/nonsense)."""
+    if not text or len(text.strip()) < 10:
+        return False
+
+    # Check for excessive non-Turkish characters
+    turkish_chars = sum(1 for c in text if c in "çğıöşüÇĞİÖŞÜ")
+    total_chars = sum(1 for c in text if c.isalpha())
+
+    if total_chars > 0 and (turkish_chars / total_chars) < 0.3:
+        return False
+
+    # Check for garbage patterns
+    garbage_patterns = ["\u4e00", "\u4e8c", "\u4e09", "\u516d", "\u4e94"]  # Chinese chars
+    for pattern in garbage_patterns:
+        if pattern in text:
+            return False
+
+    # Check for excessive special characters (likely garbage)
+    special_ratio = sum(1 for c in text if not c.isalnum() and c not in " \n\t.,!?-:\"'é") / max(len(text), 1)
+    if special_ratio > 0.3:
+        return False
+
+    return True
+
+
+def clean_response(text: str) -> str:
+    """Clean and fix response text."""
+    import re
+
+    # Remove Chinese characters
+    text = re.sub(r"[\u4e00-\u9fff]", "", text)
+    # Remove multiple spaces
+    text = re.sub(r"\s+", " ", text)
+    # Remove very long repeated characters
+    text = re.sub(r"(.)\1{5,}", r"\1\1\1", text)
+    return text.strip()
+
+
 @router.post("/query/stream")
 async def stream_query(
     request: QueryRequest,
@@ -156,15 +198,18 @@ async def stream_query(
             sources = result.get("sources", [])
             query_type = result.get("query_type", "simple")
 
-            if not answer:
-                yield f"data: {json.dumps({'content': 'Yanıt oluşturulamadı.'})}\n\n"
+            # Validate and clean the response
+            if not answer or not is_valid_response(answer):
+                yield f"data: {json.dumps({'content': 'Yanıt oluşturulamadı. Lütfen başka bir soru deneyin.'})}\n\n"
             else:
+                answer = clean_response(answer)
+
                 # Stream in sentence chunks for better performance
-                sentences = answer.replace('. ', '.|').replace('? ', '?|').replace('! ', '!|').split('|')
+                sentences = answer.replace(". ", ".|").replace("? ", "?|").replace("! ", "!|").split("|")
                 for sentence in sentences:
-                    if sentence.strip():
+                    if sentence.strip() and len(sentence.strip()) > 2:
                         yield f"data: {json.dumps({'content': sentence.strip() + ' '})}\n\n"
-                        await asyncio.sleep(0.05)  # Slightly longer delay for sentence chunks
+                        await asyncio.sleep(0.05)
 
             # Send sources as a final chunk
             if sources:
@@ -220,13 +265,14 @@ async def stream_compare(
             party_positions = result.get("party_positions", {})
             sources = result.get("sources", [])
 
-            # Stream in sentence chunks for better performance
-            if not comparison:
-                yield f"data: {json.dumps({'content': 'Karşılaştırma oluşturulamadı.'})}\n\n"
+            # Validate and clean the response
+            if not comparison or not is_valid_response(comparison):
+                yield f"data: {json.dumps({'content': 'Karşılaştırma oluşturulamadı. Lütfen başka bir soru deneyin.'})}\n\n"
             else:
-                sentences = comparison.replace('. ', '.|').replace('? ', '?|').replace('! ', '!|').split('|')
+                comparison = clean_response(comparison)
+                sentences = comparison.replace(". ", ".|").replace("? ", "?|").replace("! ", "!|").split("|")
                 for sentence in sentences:
-                    if sentence.strip():
+                    if sentence.strip() and len(sentence.strip()) > 2:
                         yield f"data: {json.dumps({'content': sentence.strip() + ' '})}\n\n"
                         await asyncio.sleep(0.05)
 

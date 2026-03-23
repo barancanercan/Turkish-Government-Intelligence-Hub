@@ -4,6 +4,9 @@ export async function POST(req: NextRequest) {
   const { message } = await req.json();
   const backendUrl = process.env.BACKEND_URL || "http://localhost:8000";
 
+  console.log('[Stream API] Received message:', message);
+  console.log('[Stream API] Backend URL:', backendUrl);
+
   const encoder = new TextEncoder();
 
   // 10 dakika timeout (büyük modeller için)
@@ -13,17 +16,26 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(streamController) {
       try {
+        const requestBody = { question: message, stream: true };
+        console.log('[Stream API] Sending to backend:', JSON.stringify(requestBody));
+
         const response = await fetch(`${backendUrl}/api/v1/query/stream`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question: message }),
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "text/event-stream",
+          },
+          body: JSON.stringify(requestBody),
           signal: controller.signal,
         });
 
+        console.log('[Stream API] Backend response status:', response.status);
         clearTimeout(timeoutId);
 
         if (!response.ok || !response.body) {
-          streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "Backend error" })}\n\n`));
+          const errorText = await response.text();
+          console.error('[Stream API] Backend error response:', errorText);
+          streamController.enqueue(encoder.encode(`data: ${JSON.stringify({ error: `Backend error: ${response.status} - ${errorText}` })}\n\n`));
           streamController.close();
           return;
         }

@@ -3,7 +3,7 @@
 
   # MizanAI
 
-  **Türk Siyasi Belgeleri için Tool-Augmented RAG (T-RAG) Platform**
+  **Türkiye'nin İlk Yapay Zeka Destekli Siyasi Belge Analiz Platformu**
 </div>
 
 [![AI/ML](https://img.shields.io/badge/AI%20Intelligence-RAG-blue.svg)](#)
@@ -13,121 +13,125 @@
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Baran%20Can%20Ercan-blue.svg?logo=linkedin)](https://linkedin.com/in/barancanercan)
 
 ---
 
-## Ozellikler (v7.1 - Advanced Multi-Agent T-RAG)
+## MizanAI Nedir?
 
-### Coklu-Ajan Mimarisi (LangGraph)
+MizanAI, Türkiye'deki 8 siyasi partinin (AKP, CHP, MHP, İYİ Parti, DEM, Saadet Partisi, Zafer Partisi, BBP) tüzük, program ve resmi belgelerini analiz eden, yapay zeka destekli bir belge sorgulama platformudur.
 
-- **Supervisor Agent:** Kullanici sorgularini analiz eder ve dogru ajanlara yonlendirir
-- **Researcher Agent:** Yerel vektor veritabani, web aramasi ve Wikipedia arastirmasi yapar
-- **Analyst Agent:** Parti karsilastirmalari ve derin analiz yapar
-- **Writer Agent:** Chain-of-Thought (CoT) ile yanit uretir
-- **Critic Agent:** Kalite kontrol + revision loop (max 2 iterasyon)
-- **Context Grader:** Dokuman alakaliligini puanlar (threshold: 0.3)
-
-### Akilli Arama Pipeline
-
-- **Query Analyzer:** Sorguyu alt sorulara ayirir, web gereksinimi belirler
-- **Search Strategy Agent:** Sorgudan parti tespit eder, optimize arama sorgulari uretir
-- **Search Synthesizer Agent:** Web sonuclarindan fact cikarir, alakasiz sonuclari filtreler
-- **Party Detection:** Sorgudan otomatik parti tespiti (UI seciminden bagimsiz)
-
-### Gelismis Arama Sistemleri
-
-- **Yerel Veritabani:** ChromaDB vektor veritabani (parti bazli filtreleme)
-- **Web Arama:** DuckDuckGo entegrasyonu + akilli sonuc filtreleme
-- **Wikipedia:** Turkce/Ingilizce Wikipedia entegrasyonu
-- **Kaynak Atiflandirma:** Her bilgi icin kaynak URL'si
-
-### Real-Time Streaming
-
-- **SSE (Server-Sent Events):** Cumle bazli streaming
-- **Typing Indicator:** Yazim animasyonu
-- **Markdown Rendering:** react-markdown ile zengin formatlama
-
-### Guvenlik (Guardrail)
-
-- **Content Filter:** Uygunsuz icerikleri engeller
-- **CORS Kontrolu:** Sadece izinli origin'ler
-- **JWT Authentication:** API guvenlik katmani
-- **Input Sanitization:** XSS ve injection korumalari
-
-### Esnek LLM Destegi
-
-- **Ollama Modelleri:** qwen2.5:7b, qwen3.5, phi3, mistral, gemma3, llama3.2
-- **Multi-Model Mimarisi:** Ana (main) ve hizli (fast) model ayri ayri yapilandirilabilir
-- **Repetition Prevention:** repeat_penalty=1.2 ile tekrar onleme
-- **Smart Fallback:** Ana model basarisiz olursa yedek modele gecer
-- **Configurable:** config.py uzerinden model degisimi
+Kullanıcılar doğal dil ile sorular sorabilir, partilerin politikalarını karşılaştırabilir ve her yanıtın hangi kaynaktan geldiğini doğrulayabilir.
 
 ---
 
-## Mimari (Multi-Agent LangGraph + Search Pipeline)
+## ✨ Özellikler
+
+### 🤖 Multi-Agent Yapay Zeka Sistemi
+
+| Agent | Görev |
+|-------|-------|
+| **Supervisor Agent** | Kullanıcı sorgularını analiz eder ve doğru ajanlara yönlendirir |
+| **Researcher Agent** | Yerel vektör veritabanı, web araması ve Wikipedia araştırması yapar |
+| **Analyst Agent** | Parti karşılaştırmaları ve derin analiz yapar |
+| **Writer Agent** | Chain-of-Thought (CoT) ile yanıt üretir |
+| **Critic Agent** | Kalite kontrol + revizyon döngüsü (max 2 iterasyon) |
+| **Context Grader** | Doküman alakalılığını puanlar (eşik: 0.3) |
+
+### 🔍 Akıllı Arama Pipeline
+
+- **Query Analyzer**: Sorguyu alt sorulara ayırır, web gereksinimini belirler
+- **Search Strategy Agent**: Sorgudan parti tespit eder, optimize arama sorguları üretir
+- **Search Synthesizer Agent**: Web sonuçlarından bilgi çıkarır, alakasız sonuçları filtreler
+- **Otomatik Parti Tespiti**: UI seçiminden bağımsız olarak sorgudan parti çıkarır
+
+### 🗄️ Gelişmiş Veri Sistemleri
+
+- **Yerel Veritabanı**: ChromaDB vektör veritabanı (parti bazlı filtreleme)
+- **Web Araması**: DuckDuckGo entegrasyonu + akıllı sonuç filtreleme
+- **Wikipedia**: Türkçe/İngilizce Wikipedia entegrasyonu
+- **Kaynak Atıflama**: Her bilgi için kaynak URL'leri
+
+### ⚡ Gerçek Zamanlı Akış
+
+- **SSE (Server-Sent Events)**: Cümle bazlı streaming
+- **Yazıyor Göstergesi**: Gerçekçi yazım animasyonu
+- **Markdown İşleme**: Zengin formatlama ve kod blokları
+
+### 🛡️ Güvenlik Önlemleri
+
+- **İçerik Filtresi**: Uygunsuz içerikleri engeller
+- **CORS Kontrolü**: Sadece izinli origin'ler
+- **JWT Kimlik Doğrulama**: API güvenlik katmanı
+- **Input Sanitization**: XSS ve injection korumaları
+
+### 🔧 Esnek LLM Desteği
+
+- **Ollama Modelleri**: qwen2.5:7b, qwen3.5, phi3, mistral, gemma3, llama3.2
+- **Multi-Model Mimarisi**: Ana (main) ve hızlı (fast) model ayrı yapılandırılabilir
+- **Tekrar Önleme**: repeat_penalty=1.2 ile tekrarları engeller
+- **Akıllı Yedekleme**: Ana model başarısız olursa yedek modele geçer
+
+---
+
+## 🏗️ Mimari
 
 ```mermaid
 graph TD
-    User[Kullanici Sorgusu] --> ContentFilter[Content Filter]
-    ContentFilter --> QueryAnalyzer[Query Analyzer]
-    QueryAnalyzer --> PartyDetect[Party Detection]
+    User[Kullanıcı Sorgusu] --> ContentFilter[İçerik Filtresi]
+    ContentFilter --> QueryAnalyzer[Sorgu Analizörü]
+    QueryAnalyzer --> PartyDetect[Parti Tespiti]
 
-    PartyDetect --> LocalSearch[Local Vector Search]
-    PartyDetect --> SearchStrategy[Search Strategy Agent]
+    PartyDetect --> LocalSearch[Yerel Vektör Araması]
+    PartyDetect --> SearchStrategy[Arama Stratejisi]
 
-    SearchStrategy --> WebSearch[Web Search]
-    WebSearch --> Synthesizer[Search Synthesizer]
+    SearchStrategy --> WebSearch[Web Araması]
+    WebSearch --> Synthesizer[Arama Sentezleyici]
 
-    LocalSearch --> Context[Combined Context]
+    LocalSearch --> Context[Birleşik Bağlam]
     Synthesizer --> Context
 
-    Context --> Supervisor[Supervisor Agent]
-    Supervisor -->|Simple Query| Researcher[Researcher Agent]
-    Supervisor -->|Comparison| Analyst[Analyst Agent]
+    Context --> LLM[Ollama LLM]
+    LLM --> UI[Next.js UI + Markdown]
 
-    Researcher --> Writer[Writer Agent + CoT]
-    Analyst --> Writer
-
-    Writer --> Critic[Critic Agent]
-    Critic -->|needs_revision| Writer
-    Critic -->|approved| SSE[SSE Stream]
-
-    SSE --> UI[Next.js UI + Markdown]
+    UI -->|SSE| User
 ```
 
 ---
 
-## Kurulum
+## 🚀 Kurulum
 
 ### Gereksinimler
 
 - Python 3.10+
 - Node.js 18+
-- Ollama
+- Ollama (local LLM için)
 
 ### 1. Ollama Kurulumu
 
 ```bash
+# Ollama'yı indirin: https://ollama.com
+
 # Model indirme
 ollama pull qwen2.5:7b
-
-# veya cloud model icin
-ollama login
-ollama pull kimi-k2.5:cloud
 ```
 
 ### 2. Python Backend
 
 ```bash
-# Virtual environment
+# Virtual environment oluştur
 python -m venv .venv
-.venv\Scripts\activate  # Windows
-source .venv/bin/activate  # Linux/Mac
 
-# Bagimliliklari yukle
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
+
+# Bağımlılıkları yükle
 pip install -r requirements.txt
 
-# Backend'i baslat
+# Backend'i başlat
 uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
@@ -139,197 +143,200 @@ npm install
 npm run dev
 ```
 
-Tarayicida acin: http://localhost:3000
+Tarayıcıda açın: http://localhost:3000
 
 ### 4. Vercel'e Deploy
 
 ```bash
 cd web
+npm i -g vercel
 vercel deploy
 ```
 
 ---
 
-## Proje Yapisi
+## 📁 Proje Yapısı
 
 ```
 mizan-ai/
-├── web/                          # Next.js frontend (Vercel)
+├── web/                          # Next.js frontend
 │   ├── app/
 │   │   ├── page.tsx              # Ana sayfa
-│   │   ├── chat/page.tsx         # Chat arayuzu (Markdown)
+│   │   ├── chat/page.tsx         # Chat arayüzü
+│   │   ├── about/page.tsx        # Hakkımızda
 │   │   ├── layout.tsx            # Layout
 │   │   └── api/chat/
 │   │       └── stream/route.ts   # SSE streaming endpoint
 │   ├── components/
-│   │   └── TypingIndicator.tsx   # Yazim animasyonu
+│   │   ├── Animated.tsx          # Animasyon bileşenleri
+│   │   ├── Navbar.tsx            # Navigasyon
+│   │   ├── Footer.tsx            # Footer
+│   │   ├── Skeleton.tsx          # Yükleme göstergeleri
+│   │   └── ScrollToTop.tsx      # Yukarı kaydır
+│   ├── tailwind.config.ts        # Tailwind yapılandırma
 │   └── package.json
 │
 ├── src/                          # Python backend
-│   ├── config.py                 # LLM model yapilandirma
-│   │
-│   ├── agents/                   # LangGraph ajanlari
-│   │   ├── graph.py              # Workflow + revision loop
-│   │   ├── supervisor.py         # Sorgu yonlendirme
-│   │   ├── researcher.py         # Arastirma ajani
-│   │   ├── analyst.py            # Analiz ajani
-│   │   ├── writer.py             # CoT yanit uretimi
-│   │   ├── critic.py             # Kalite kontrol
-│   │   ├── grader.py             # Context relevance grading
-│   │   ├── tools.py              # RAG, Web, Wikipedia araclari
-│   │   ├── prompts.py            # Sistem promptlari
-│   │   └── state.py              # AgentState modeli
-│   │
-│   ├── core/                     # Temel moduller
-│   │   ├── query_analyzer.py     # Alt soru uretimi
+│   ├── config.py                 # LLM model yapılandırma
+│   ├── agents/                   # LangGraph ajanları
+│   │   └── grader.py             # Bağlam değerlendirme
+│   ├── core/                     # Temel modüller
+│   │   ├── query_analyzer.py     # Sorgu analizi
 │   │   ├── search_agent.py       # Arama koordinasyonu
-│   │   ├── search_strategy_agent.py   # Strateji belirleme
-│   │   ├── search_synthesizer_agent.py # Sonuc sentezleme
-│   │   ├── content_filter.py     # Icerik filtreleme
+│   │   ├── search_strategy_agent.py
+│   │   ├── search_synthesizer_agent.py
+│   │   ├── content_filter.py     # İçerik filtreleme
 │   │   ├── parties.py            # Parti normalizasyonu
 │   │   ├── llm_setup.py          # LLM kurulumu
 │   │   ├── cache.py              # Vectorstore cache
-│   │   └── duckduckgo_search.py  # Web arama
-│   │
+│   │   └── duckduckgo_search.py # Web arama
 │   ├── api/                      # FastAPI
 │   │   ├── main.py               # API entrypoint
-│   │   ├── config.py             # CORS, JWT ayarlari
+│   │   ├── config.py             # CORS, JWT ayarları
 │   │   ├── routers/
-│   │   │   └── query.py          # SSE streaming endpoint
+│   │   │   └── query.py          # Sorgu endpoint'leri
 │   │   └── services/
-│   │       └── query_service.py  # Full pipeline service
-│   │
-│   └── app.py                    # Streamlit UI (legacy)
+│   │       └── query_service.py  # Tam pipeline servisi
+│   └── models.py                 # Veri modelleri
 │
 ├── data/pdfs/                    # Parti belgeleri (PDF)
-├── vector_db/                    # ChromaDB vektor veritabani
-├── requirements.txt              # Python bagimliliklari
+├── vector_db/                    # ChromaDB vektör veritabanı
+├── requirements.txt              # Python bağımlılıkları
 └── README.md
 ```
 
 ---
 
-## API Endpoints
+## 📡 API Endpoint'leri
 
-| Endpoint | Method | Aciklama |
-|----------|--------|----------|
-| `/api/v1/query` | POST | Sorgu isleme (SSE stream) |
-| `/api/v1/query/compare` | POST | Parti karsilastirma |
+| Endpoint | Metod | Açıklama |
+|----------|-------|----------|
+| `/api/v1/query` | POST | Sorgu işleme |
+| `/api/v1/query/stream` | POST | Sorgu işleme (SSE stream) |
+| `/api/v1/query/compare` | POST | Parti karşılaştırma |
 | `/api/v1/query/analyze` | POST | Derin analiz |
 | `/api/v1/parties` | GET | Desteklenen partiler |
-| `/health` | GET | Saglik kontrolu |
+| `/api/v1/system/health` | GET | Sağlık kontrolü |
 
----
+### Örnek Kullanım
 
-## Desteklenen Partiler
+```bash
+# Sorgu endpoint'i
+curl -X POST http://localhost:8000/api/v1/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "CHP genel başkanı kimdir?"}'
 
-| Parti | Tam Ad | Lider |
-|-------|--------|-------|
-| AKP | Adalet ve Kalkinma Partisi | Recep Tayyip Erdogan |
-| CHP | Cumhuriyet Halk Partisi | Ozgur Ozel |
-| MHP | Milliyetci Hareket Partisi | Devlet Bahceli |
-| IYI | IYI Parti | Musavat Dervisoglu |
-| DEM | Halklarin Esitlik ve Demokrasi Partisi | Tuncer Bakirhan, Tulay Hatimogullari |
-| SP | Saadet Partisi | Temel Karamollaoglu |
-| ZP | Zafer Partisi | Umit Ozdag |
-| BBP | Buyuk Birlik Partisi | Mustafa Destici |
-
----
-
-## Ornek Sorgular
-
-```
-# Kisi sorgulari (Wikipedia + Web)
-"AKP genel baskani kimdir ve nasil secilir?"
-"Mansur Yavas kimdir?"
-
-# Parti politikalari (RAG)
-"CHP'nin ekonomi politikasi nedir?"
-"MHP'nin egitim programi"
-
-# Karsilastirma (Analyst)
-"AKP ve CHP'nin sosyal politikalarini karsilastir"
-
-# Guncel bilgi (Web Search)
-"DEM Parti kac belediye kazandi?"
+# Stream endpoint
+curl -X POST http://localhost:8000/api/v1/query/stream \
+  -H "Content-Type: application/json" \
+  -d '{"question": "AKP ve CHP'nin ekonomi politikalarını karşılaştır"}'
 ```
 
 ---
 
-## Konfigurasyonla
+## 🏛️ Desteklenen Partiler
 
-### LLM Model Degisimi
+| Kısaltma | Tam Ad | Lider |
+|----------|--------|-------|
+| AKP | Adalet ve Kalkınma Partisi | Recep Tayyip Erdoğan |
+| CHP | Cumhuriyet Halk Partisi | Özgür Özel |
+| MHP | Milliyetçi Hareket Partisi | Devlet Bahçeli |
+| İYİ | İYİ Parti | Müsavat Dervişoğlu |
+| DEM | Halkların Eşitlik ve Demokrasi Partisi | Tuncer Bakırhan |
+| SP | Saadet Partisi | Temel Karamollaoğlu |
+| ZP | Zafer Partisi | Ümit Özdağ |
+| BBP | Büyük Birlik Partisi | Mustafa Destici |
+
+---
+
+## 💬 Örnek Sorgular
+
+```bash
+# Parti politikaları (RAG)
+"CHP'nin ekonomi politikası nedir?"
+"MHP'nin eğitim programı"
+
+# Karşılaştırma
+"AKP ve CHP'nin sosyal politikalarını karşılaştır"
+
+# Güncel bilgi (Web Araması)
+"DEM Parti kaç belediye kazandı?"
+
+# Kişi sorguları
+"AKP genel başkanı kimdir?"
+```
+
+---
+
+## ⚙️ Yapılandırma
+
+### LLM Model Değişimi
 
 ```python
 # src/config.py
 LLM_MODELS = {
-    "main": "qwen2.5:7b",   # Ana model - karmasik sorular
-    "fast": "qwen2.5:7b",   # Hizli model - web sentezi, grading
+    "main": "qwen2.5:7b",   # Ana model - karmaşık sorular
+    "fast": "qwen2.5:7b",   # Hızlı model - web sentezi
 }
-LLM_MODEL = "qwen2.5:7b"
-LLM_TEMPERATURE = 0.3           # Yaraticilik ve tekrar onleme dengesi
-
-# src/core/llm_setup.py
-repeat_penalty = 1.2            # Tekrar onleme
-num_predict = 512               # Max token siniri
+LLM_TEMPERATURE = 0.3       # Yaratıcılık dengesi
 ```
 
-### Context Grader Threshold
+### Bağlam Değerlendirme Eşiği
 
 ```python
 # src/agents/grader.py
-RELEVANCE_THRESHOLD = 0.3       # 0.0-1.0 arasi
-```
-
-### CORS Ayarlari
-
-```python
-# src/api/config.py
-CORS_ORIGINS = ["http://localhost:3000", "https://your-domain.vercel.app"]
+RELEVANCE_THRESHOLD = 0.3    # 0.0-1.0 arası
 ```
 
 ---
 
-## Test
+## 🧪 Test
 
 ```bash
-# Lint kontrolu
+# Lint kontrolü
 ruff check .
 
-# Format kontrolu
+# Format kontrolü
 black .
 
-# Testleri calistir
+# Testleri çalıştır
 pytest tests/
 
 # API test
 curl -X POST http://localhost:8000/api/v1/query \
   -H "Content-Type: application/json" \
-  -d '{"question": "CHP genel baskani kimdir?"}'
+  -d '{"question": "CHP genel başkanı kimdir?"}'
 ```
 
 ---
 
-## Katkida Bulunma
+## 🤝 Katkıda Bulunma
 
-Bu proje Turk siyasi bilgilerine erisimi demokratiklestirmeyi amaclamaktadir:
+Bu proje Türk siyasi bilgilerine erişimi demokratikleştirmeyi amaçlamaktadır:
 
 - Yeni siyasi parti belgeleri ekleyin
-- UI/UX iyilestirmeleri yapin
+- UI/UX iyileştirmeleri yapın
 - Yeni agent'lar ekleyin
-- Test coverage artirin
+- Test coverage artırın
 
 ---
 
-## Lisans
+## 📄 Lisans
 
-MIT License altinda dagitilmaktadir. Detaylar icin `LICENSE` dosyasina bakin.
+MIT License altında dağıtılmaktadır. Detaylar için `LICENSE` dosyasına bakın.
 
-**Gelistirici:** Baran Can Ercan
+---
+
+## 👨‍💻 Geliştirici
+
+**Baran Can Ercan** - [GitHub](https://github.com/barancan)
 
 ---
 
 <div align="center">
-  <b>mizan-ai v7.1</b><br>
-  Turk Siyasi Belgeleri icin Advanced Multi-Agent RAG Platform
+  <b>MizanAI v8.0</b><br>
+  Türkiye'nin Yapay Zeka Destekli Siyasi Belge Analiz Platformu<br><br>
+  <a href="https://github.com/barancan/mizan-ai">GitHub</a> • 
+  <a href="https://mizanai.com">Website</a> • 
+  <a href="mailto:barancanercan@gmail.com">İletişim</a>
 </div>
