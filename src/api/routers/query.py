@@ -132,24 +132,20 @@ async def analyze(
 def is_valid_response(text: str) -> bool:
     """Check if response is valid (not garbage/nonsense)."""
     if not text or len(text.strip()) < 10:
+        logger.warning(f"Response too short: {len(text.strip()) if text else 0} chars")
         return False
 
-    # Check for excessive non-Turkish characters
-    turkish_chars = sum(1 for c in text if c in "çğıöşüÇĞİÖŞÜ")
-    total_chars = sum(1 for c in text if c.isalpha())
-
-    if total_chars > 0 and (turkish_chars / total_chars) < 0.3:
-        return False
-
-    # Check for garbage patterns
-    garbage_patterns = ["\u4e00", "\u4e8c", "\u4e09", "\u516d", "\u4e94"]  # Chinese chars
+    # Check for garbage patterns (Chinese characters)
+    garbage_patterns = ["\u4e00", "\u4e8c", "\u4e09", "\u516d", "\u4e94"]
     for pattern in garbage_patterns:
         if pattern in text:
+            logger.warning("Response contains garbage characters")
             return False
 
     # Check for excessive special characters (likely garbage)
-    special_ratio = sum(1 for c in text if not c.isalnum() and c not in " \n\t.,!?-:\"'é") / max(len(text), 1)
-    if special_ratio > 0.3:
+    special_ratio = sum(1 for c in text if not c.isalnum() and c not in " \n\t.,!?-:\"'éçğıöşüÇĞİÖŞÜ") / max(len(text), 1)
+    if special_ratio > 0.4:
+        logger.warning(f"Response has too many special chars: {special_ratio:.2f}")
         return False
 
     return True
