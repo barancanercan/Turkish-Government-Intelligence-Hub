@@ -27,4 +27,8 @@ Desktop.ini
 
 # Claude Code
 .claude/
+
+# Temporary/Screenshots
 img.png
+nul
+*.tmp

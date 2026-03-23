@@ -179,49 +179,54 @@ vercel deploy
 
 ```
 mizan-ai/
-├── web/                          # Next.js frontend
+├── web/                              # Next.js 15 Frontend
 │   ├── app/
-│   │   ├── page.tsx              # Ana sayfa
-│   │   ├── chat/page.tsx         # Chat arayüzü
-│   │   ├── about/page.tsx        # Hakkımızda
-│   │   ├── layout.tsx            # Layout
-│   │   └── api/chat/
-│   │       └── stream/route.ts   # SSE streaming endpoint
+│   │   ├── page.tsx                  # Ana sayfa
+│   │   ├── chat/page.tsx             # Chat arayüzü
+│   │   ├── about/page.tsx            # Hakkımızda
+│   │   ├── layout.tsx                # Root layout
+│   │   └── api/chat/stream/route.ts  # SSE streaming proxy
 │   ├── components/
-│   │   ├── Animated.tsx          # Animasyon bileşenleri
-│   │   ├── Navbar.tsx            # Navigasyon
-│   │   ├── Footer.tsx            # Footer
-│   │   ├── Skeleton.tsx          # Yükleme göstergeleri
-│   │   └── ScrollToTop.tsx      # Yukarı kaydır
-│   ├── tailwind.config.ts        # Tailwind yapılandırma
-│   └── package.json
+│   │   ├── Navbar.tsx                # Navigasyon
+│   │   ├── Footer.tsx                # Footer
+│   │   ├── Animated.tsx              # Framer Motion animasyonları
+│   │   ├── Skeleton.tsx              # Loading states
+│   │   └── ScrollToTop.tsx           # Scroll button
+│   └── tailwind.config.ts            # Tailwind CSS config
 │
-├── src/                          # Python backend
-│   ├── config.py                 # LLM model yapılandırma
-│   ├── agents/                   # LangGraph ajanları
-│   │   └── grader.py             # Bağlam değerlendirme
-│   ├── core/                     # Temel modüller
-│   │   ├── query_analyzer.py     # Sorgu analizi
-│   │   ├── search_agent.py       # Arama koordinasyonu
-│   │   ├── search_strategy_agent.py
-│   │   ├── search_synthesizer_agent.py
-│   │   ├── content_filter.py     # İçerik filtreleme
-│   │   ├── parties.py            # Parti normalizasyonu
-│   │   ├── llm_setup.py          # LLM kurulumu
-│   │   ├── cache.py              # Vectorstore cache
-│   │   └── duckduckgo_search.py # Web arama
-│   ├── api/                      # FastAPI
-│   │   ├── main.py               # API entrypoint
-│   │   ├── config.py             # CORS, JWT ayarları
+├── src/                              # Python Backend (FastAPI)
+│   ├── config.py                     # Ana yapılandırma
+│   ├── api/
+│   │   ├── main.py                   # FastAPI entrypoint
+│   │   ├── config.py                 # CORS, JWT ayarları
 │   │   ├── routers/
-│   │   │   └── query.py          # Sorgu endpoint'leri
+│   │   │   ├── query.py              # Sorgu endpoint'leri
+│   │   │   ├── parties.py            # Parti listesi
+│   │   │   ├── auth.py               # Kimlik doğrulama
+│   │   │   └── system.py             # Health check
+│   │   ├── middleware/
+│   │   │   ├── auth.py               # JWT middleware
+│   │   │   └── rate_limit.py         # Rate limiting
 │   │   └── services/
-│   │       └── query_service.py  # Tam pipeline servisi
-│   └── models.py                 # Veri modelleri
+│   │       └── query_service.py      # Ana query pipeline
+│   ├── core/
+│   │   ├── llm_setup.py              # Ollama/Gemini LLM kurulumu
+│   │   ├── query_analyzer.py         # Sorgu analizi
+│   │   ├── search_agent.py           # Arama koordinasyonu
+│   │   ├── search_strategy_agent.py  # Arama stratejisi
+│   │   ├── search_synthesizer_agent.py # Sonuç sentezi
+│   │   ├── content_filter.py         # İçerik filtreleme
+│   │   ├── parties.py                # Parti normalizasyonu
+│   │   ├── cache.py                  # Embedding cache
+│   │   └── duckduckgo_search.py      # Web arama
+│   ├── agents/
+│   │   └── grader.py                 # Bağlam değerlendirme
+│   └── models.py                     # Pydantic modeller
 │
-├── data/pdfs/                    # Parti belgeleri (PDF)
-├── vector_db/                    # ChromaDB vektör veritabanı
-├── requirements.txt              # Python bağımlılıkları
+├── data/pdfs/                        # Parti belgeleri (PDF)
+├── vector_db/                        # ChromaDB veritabanı
+├── tests/                            # Pytest testleri
+├── requirements.txt                  # Python bağımlılıkları
 └── README.md
 ```
 
@@ -349,14 +354,17 @@ MIT License altında dağıtılmaktadır. Detaylar için `LICENSE` dosyasına ba
 
 ## 👨‍💻 Geliştirici
 
-**Baran Can Ercan** - [GitHub](https://github.com/barancan)
+**Baran Can Ercan**
+
+[![GitHub](https://img.shields.io/badge/GitHub-barancanercan-black?logo=github)](https://github.com/barancanercan)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-barancanercan-blue?logo=linkedin)](https://linkedin.com/in/barancanercan)
+[![Email](https://img.shields.io/badge/Email-barancanercan%40gmail.com-red?logo=gmail)](mailto:barancanercan@gmail.com)
 
 ---
 
 <div align="center">
-  <b>MizanAI v8.0</b><br>
+  <b>MizanAI</b><br>
   Türkiye'nin Yapay Zeka Destekli Siyasi Belge Analiz Platformu<br><br>
-  <a href="https://github.com/barancan/mizan-ai">GitHub</a> • 
-  <a href="https://mizanai.com">Website</a> • 
+  <a href="https://github.com/barancanercan/mizan-ai">GitHub</a> •
   <a href="mailto:barancanercan@gmail.com">İletişim</a>
 </div>
