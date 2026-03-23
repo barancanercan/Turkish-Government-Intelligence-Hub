@@ -277,7 +277,7 @@ def stream_response(response_gen: Any, llm_type: str) -> str:
 def single_party_mode(party: str):
     party = normalize_party_name(party)
     utils.print_header(f"🤖 {party} Soru-Cevap Sistemi")
-    
+
     db_path = config.UNIFIED_VECTOR_DB
     if not db_path or not db_path.exists():
         utils.logger.error("❌ DB bulunamadı!")
@@ -292,7 +292,7 @@ def single_party_mode(party: str):
         return
 
     utils.logger.info("✅ Sistem hazır!")
-    
+
     while True:
         question = input("Sorunuz: ").strip()
         if question.lower() in ["q", "quit", "exit"]:
@@ -314,7 +314,7 @@ def single_party_mode(party: str):
 def multi_party_mode():
     utils.print_header("🤖 Çoklu Parti Q&A")
     prepared_parties = normalize_parties_list(utils.get_prepared_parties())
-    
+
     if not prepared_parties:
         utils.logger.error("❌ DB yok!")
         return

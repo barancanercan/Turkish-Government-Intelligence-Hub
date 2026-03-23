@@ -17,10 +17,10 @@ def normalize_party_name(party: str) -> str:
         str: Normalized party name
     """
     party_upper = party.upper()
-    
+
     if party_upper in ("IYI", "İYİ"):
         return "İYİ"
-    
+
     return party_upper
 
 

@@ -30,7 +30,7 @@ class RouterEngine:
     - Güncel olay/gündem sorguları → Web Arama (DuckDuckGo)
     - Hibrit sorgular → Her ikisi de kullanılır
     """
-    
+
     PARTI_KEYWORDS = {
         "CHP": ["chp", "cumhuriyet halk", "kılıçdaroğlu", "özel", "chp'li"],
         "AKP": ["akp", "adalet kalkınma", "erdoğan", "ak partili", "akp'li"],
@@ -41,7 +41,7 @@ class RouterEngine:
         "ZP": ["zafer", "zafer partisi", "üzmcü", "zp'li"],
         "BBP": ["büyük birlik", "bbp", "bbp'li"],
     }
-    
+
     WEB_SEARCH_TRIGGERS = [
         r"\b(bugün|son|güncel|son\s+haber|son\s+gelişme)\b",
         r"\b(miting|kongre|toplantı|açıklama|basın)\b",
@@ -52,7 +52,7 @@ class RouterEngine:
         r"\b(kim\s+olsun|kim\b.*\b(seçildi|olacak|başkan))\b",
         r"(genel\s*başkan|başbakan|cumhurbaşkanı)\s*(kim|nedir)",
     ]
-    
+
     LOCAL_SEARCH_TRIGGERS = [
         r"\b(tüzük|madde|karar|genel kurul)\b",
         r"\b(politika|ilkeler|program)\b",
@@ -61,10 +61,10 @@ class RouterEngine:
         r"\b(kuruluş|tarihçe|geçmiş)\b",
         r"\b(\d+\.?\d*\s*(madde|madde\s*no))\b",
     ]
-    
+
     def __init__(self, threshold: float = 0.2):
         self.threshold = threshold
-    
+
     def analyze_intent(self, query: str) -> IntentAnalysis:
         """
         Sorguyu analiz eder ve niyet tipini belirler.
@@ -76,15 +76,15 @@ class RouterEngine:
             IntentAnalysis: Niyet analizi sonucu
         """
         query_lower = query.lower()
-        
+
         parties = self._extract_parties(query_lower)
         web_score = self._calculate_web_score(query_lower)
         local_score = self._calculate_local_score(query_lower)
-        
+
         needs_web = web_score >= self.threshold
-        
+
         reasoning = self._build_reasoning(web_score, local_score, parties)
-        
+
         return IntentAnalysis(
             intent_type="web" if needs_web else "local",
             confidence=max(web_score, local_score),
@@ -92,7 +92,7 @@ class RouterEngine:
             parties_mentioned=parties,
             reasoning=reasoning,
         )
-    
+
     def _extract_parties(self, query: str) -> List[str]:
         """Sorguda bahsedilen partileri bulur."""
         parties = []
@@ -103,7 +103,7 @@ class RouterEngine:
                         parties.append(party)
                     break
         return parties
-    
+
     def _calculate_web_score(self, query: str) -> float:
         """Web araması ihtiyacını hesaplar."""
         score = 0.0
@@ -111,7 +111,7 @@ class RouterEngine:
             if re.search(pattern, query, re.IGNORECASE):
                 score += 0.2
         return min(score, 1.0)
-    
+
     def _calculate_local_score(self, query: str) -> float:
         """Yerel vektör araması ihtiyacını hesaplar."""
         score = 0.0
@@ -119,21 +119,21 @@ class RouterEngine:
             if re.search(pattern, query, re.IGNORECASE):
                 score += 0.25
         return min(score, 1.0)
-    
+
     def _build_reasoning(self, web_score: float, local_score: float, parties: List[str]) -> str:
         """Karar sürecini açıklar."""
         reason_parts = []
-        
+
         if parties:
             reason_parts.append(f"Partiler: {', '.join(parties)}")
-        
+
         if web_score > local_score:
             reason_parts.append(f"Güncel olay tespiti: %{int(web_score*100)}")
         else:
             reason_parts.append(f"Tüzük/politika ağırlıklı: %{int(local_score*100)}")
-        
+
         return " | ".join(reason_parts)
-    
+
     def should_search_web(self, query: str) -> Tuple[bool, float]:
         """
         Sorgunun web araması gerektirip gerektirmediğini belirler.
@@ -143,7 +143,7 @@ class RouterEngine:
         """
         analysis = self.analyze_intent(query)
         return analysis.needs_web_search, analysis.confidence
-    
+
     def get_parties_from_query(self, query: str) -> List[str]:
         """Sorgudan parti listesini çıkarır."""
         analysis = self.analyze_intent(query)

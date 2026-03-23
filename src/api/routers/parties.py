@@ -18,7 +18,7 @@ async def list_parties():
     Get list of all available parties.
     """
     from src import config
-    
+
     parties = []
     for party_code, party_data in config.PARTY_INFO.items():
         parties.append(PartyInfo(
@@ -31,7 +31,7 @@ async def list_parties():
             founded=party_data.get("founded"),
             description=party_data.get("description"),
         ))
-    
+
     return PartyListResponse(parties=parties, total=len(parties))
 
 
@@ -41,14 +41,14 @@ async def get_party(party_code: str):
     Get detailed information about a specific party.
     """
     from src import config
-    
+
     party_code = party_code.upper()
-    
+
     if party_code not in config.PARTY_INFO:
         raise HTTPException(status_code=404, detail="Party not found")
-    
+
     party_data = config.PARTY_INFO[party_code]
-    
+
     return PartyInfo(
         code=party_code,
         name=party_data.get("name", party_code),

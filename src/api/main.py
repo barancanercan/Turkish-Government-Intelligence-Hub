@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     """Create and configure FastAPI application."""
-    
+
     app = FastAPI(
         title="MIZAN-AI API",
         description="Political Document Analysis API with RAG",
@@ -35,7 +35,7 @@ def create_app() -> FastAPI:
         redoc_url="/redoc",
         lifespan=lifespan,
     )
-    
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
@@ -43,14 +43,14 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    
+
     app.add_middleware(RateLimitMiddleware)
-    
+
     app.include_router(query.router, prefix="/api/v1", tags=["Query"])
     app.include_router(parties.router, prefix="/api/v1", tags=["Parties"])
     app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
     app.include_router(system.router, prefix="/api/v1", tags=["System"])
-    
+
     return app
 
 

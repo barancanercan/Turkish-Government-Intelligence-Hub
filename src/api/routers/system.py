@@ -40,7 +40,7 @@ async def get_stats():
     """
     total = stats["total_requests"]
     cache_rate = stats["cache_hits"] / total if total > 0 else 0.0
-    
+
     return StatsResponse(
         total_requests=total,
         unique_users=stats["unique_users"],

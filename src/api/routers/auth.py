@@ -24,7 +24,7 @@ async def register(user: UserCreate):
     """
     if user.username in users_db:
         raise HTTPException(status_code=400, detail="Username already exists")
-    
+
     users_db[user.username] = {
         "id": f"user_{len(users_db) + 1}",
         "username": user.username,
@@ -33,7 +33,7 @@ async def register(user: UserCreate):
         "tier": "free",
         "created_at": datetime.now(),
     }
-    
+
     return UserResponse(
         id=users_db[user.username]["id"],
         username=user.username,
@@ -49,14 +49,14 @@ async def login(credentials: TokenRequest):
     Login and get access token.
     """
     user = users_db.get(credentials.username)
-    
+
     if not user or user["password"] != credentials.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
     access_token = create_access_token(
         data={"sub": user["username"], "tier": user["tier"]}
     )
-    
+
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",
@@ -88,5 +88,5 @@ async def submit_feedback(
     Submit feedback for a query.
     """
     logger.info(f"Feedback: query={query_id}, rating={rating}, user={user_id}")
-    
+
     return {"success": True, "message": "Feedback received"}

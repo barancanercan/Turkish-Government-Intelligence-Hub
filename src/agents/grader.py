@@ -71,7 +71,7 @@ Bu belge soruyu yanıtlamak için faydalı mı? Sadece "EVET" veya "HAYIR" yaz:"
                 response = str(self.llm.invoke(grading_prompt)).strip().upper()
                 if "EVET" in response:
                     base_score = min(1.0, base_score + 0.2)
-                    logger.debug(f"LLM grading: +0.2 boost for relevant doc")
+                    logger.debug("LLM grading: +0.2 boost for relevant doc")
             except Exception as e:
                 logger.debug(f"LLM grading skipped: {e}")
 

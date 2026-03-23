@@ -60,7 +60,6 @@ class QueryService:
             from src.core.content_filter import should_answer
             from src.core.cache import get_vectorstore
             from src.core.parties import normalize_party_name
-            from src import config
 
             # 1. ÖNCE SORGUDAN PARTİ TESPİT ET!
             synthesizer = get_search_synthesizer()

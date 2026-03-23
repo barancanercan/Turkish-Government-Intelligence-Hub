@@ -71,7 +71,7 @@ class SearchAgent:
         cleaned = re.sub(r'\s+', ' ', cleaned).strip()
 
         return cleaned
-    
+
     def search(self, query: str, party: Optional[str] = None) -> SearchContext:
         """
         SearchStrategyAgent ile entegre arama yapar.
@@ -133,7 +133,7 @@ class SearchAgent:
 
         logger.info(f"SearchAgent: {len(filtered_results)} alakali sonuc bulundu")
         return context
-    
+
     def _search_party_specific(self, query: str, party: str) -> List[SearchResult]:
         """Parti-spesifik arama yapar"""
         # Sorguyu temizle
@@ -164,12 +164,12 @@ class SearchAgent:
 
         # search_party_news kullan - daha iyi sonuç veriyor
         return self.search_engine.search_party_news(party, topic_clean)
-    
+
     def _search_general(self, query: str) -> List[SearchResult]:
         """Genel arama yapar"""
         enhanced_query = f"{query} Türkiye siyaset"
         return self.search_engine.search(enhanced_query, max_results=self.max_results)
-    
+
     def _is_relevant_result(self, result: SearchResult, party: Optional[str]) -> bool:
         """Sonucun alakalı olup olmadığını kontrol eder."""
         # Alakasız sonuç kalıpları
@@ -217,7 +217,7 @@ class SearchAgent:
             formatted += f"   Kaynak: {r.url}\n\n"
 
         return formatted
-    
+
     def should_use_web_search(self, query: str, local_score: float) -> bool:
         """
         Web araması yapılması gerekip gerekmediğini belirler.
@@ -232,15 +232,15 @@ class SearchAgent:
         # Düşük yerel skor = web araması gerekli
         if local_score < 0.5:
             return True
-        
+
         # Zaman/tarih içeren sorular
         time_keywords = ["kimdir", "bugün", "son", "güncel", "ne zaman", "kaç", "nerede"]
         query_lower = query.lower()
-        
+
         for keyword in time_keywords:
             if keyword in query_lower:
                 return True
-        
+
         return False
 
 

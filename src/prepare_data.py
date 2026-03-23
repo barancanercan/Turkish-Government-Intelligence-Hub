@@ -117,7 +117,7 @@ def prepare_party_data(
             # Varsa eski partinin verilerini temizle (re-indexing için)
             utils.logger.info(f"🔄 Eski {party} verileri temizleniyor...")
             try:
-                # Bazı LangChain/Chroma versiyonlarında bu hata verebiliyor, 
+                # Bazı LangChain/Chroma versiyonlarında bu hata verebiliyor,
                 # bu yüzden koruyucu bir blok içine alıyoruz.
                 vectorstore.delete(where={"party": party})
             except Exception as e:

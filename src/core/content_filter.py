@@ -44,15 +44,15 @@ def is_offensive(query: str) -> Tuple[bool, str]:
         Tuple[bool, str]: (hakaret_var, sebep)
     """
     query_lower = query.lower()
-    
+
     for word in OFFENSIVE_WORDS:
         if word in query_lower:
             return True, f"Hakaret içeren kelime tespit edildi: {word}"
-    
+
     for pattern in OFFENSIVE_PATTERNS:
         if re.search(pattern, query_lower):
             return True, "Hakaret içeren kalıp tespit edildi"
-    
+
     return False, ""
 
 
@@ -67,10 +67,10 @@ def should_answer(query: str) -> Tuple[bool, str]:
         Tuple[bool, str]: (cevap_verilsin, mesaj)
     """
     is_bad, reason = is_offensive(query)
-    
+
     if is_bad:
         return False, "Bu soru uygunsuz içerik barındırdığı için yanıtlanamıyor. Siyasi konularda size yardımcı olmaktan memnuniyet duyarım. Saygılarımla."
-    
+
     return True, ""
 
 

@@ -27,11 +27,11 @@ class DuckDuckGoSearch:
     - Web Arama (Tavily) yerine ücretsiz alternatif
     - Güncel siyasi haberler ve gelişmeler için kullanılır
     """
-    
+
     def __init__(self, max_results: int = 5, timeout: int = 10):
         self.max_results = max_results
         self.timeout = timeout
-    
+
     def search(self, query: str, max_results: Optional[int] = None) -> List[SearchResult]:
         """
         DuckDuckGo'da arama yapar.
@@ -45,10 +45,10 @@ class DuckDuckGoSearch:
         """
         try:
             from duckduckgo_search import DDGS  # pip install duckduckgo-search
-            
+
             results = []
             max_res = max_results or self.max_results
-            
+
             # Arama stratejisi: Önce news, sonra text
             with DDGS(timeout=self.timeout) as ddgs:
                 # Önce haberleri dene
@@ -62,7 +62,7 @@ class DuckDuckGoSearch:
                         ))
                 except Exception:
                     pass
-                
+
                 # Sonra normal arama
                 if len(results) < max_res:
                     for r in ddgs.text(query, max_results=max_res - len(results)):
@@ -72,17 +72,17 @@ class DuckDuckGoSearch:
                             snippet=r.get("body", ""),
                             source="duckduckgo"
                         ))
-            
+
             logger.info(f"✅ DuckDuckGo: {len(results)} sonuç bulundu")
             return results
-            
+
         except ImportError:
             logger.warning("⚠️ duckduckgo-search kurulu değil")
             return self._mock_search(query)
         except Exception as e:
             logger.error(f"❌ DuckDuckGo arama hatası: {str(e)}")
             return self._mock_search(query)
-    
+
     def _mock_search(self, query: str) -> List[SearchResult]:
         """Mock sonuçlar döner (test için)."""
         return [
@@ -93,7 +93,7 @@ class DuckDuckGoSearch:
                 source="mock"
             )
         ]
-    
+
     def search_turkish_news(self, query: str, days: int = 7) -> List[SearchResult]:
         """
         Türkçe haberler için özelleştirilmiş arama.
@@ -107,7 +107,7 @@ class DuckDuckGoSearch:
         """
         enhanced_query = f"{query} Türkiye siyaset"
         return self.search(enhanced_query)
-    
+
     def search_party_news(self, party: str, topic: str = "") -> List[SearchResult]:
         """
         Belirli bir parti ile ilgili haberleri arar.
