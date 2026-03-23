@@ -1,60 +1,63 @@
 # MizanAI LinkedIn Duyuru Postları
 
-## Ana Post (Türkçe)
+## Ana Post (Türkçe) - ÖNERİLEN
 
 ---
 
-🚀 **Yeni Proje Duyurusu: MizanAI**
+🗳️ **Türkiye'de siyasi bilgiye erişim neden bu kadar zor?**
 
-Türkiye'nin ilk yapay zeka destekli siyasi belge analiz platformunu geliştirdim!
+Bir partinin ekonomi politikasını öğrenmek istediğinizde ne yapıyorsunuz?
 
-**MizanAI Nedir?**
-> *mizan (Arapça)* — terazi, denge, ölçü
+Google'da saatlerce arama, yanlı haber siteleri, eksik bilgiler, manipülatif içerikler...
 
-8 siyasi partinin (AKP, CHP, MHP, İYİ, DEM, SP, ZP, BBP) tüzük, program ve resmi belgelerini yapay zeka ile analiz eden bir RAG platformu.
+**Sorun:** 8 siyasi partinin tüzükleri, programları ve resmi belgeleri var — ama kimse bunları okumuyor. Çünkü yüzlerce sayfa, karmaşık dil ve dağınık kaynaklar.
 
-**🔧 Teknik Özellikler:**
+**Çözüm:** MizanAI
 
-• **Multi-Agent Mimarisi** — LangGraph ile koordineli çalışan ajanlar
-• **Domain-Specific RAG** — Türkçe BGE-M3 embeddings ile vektör araması
-• **Hibrit Arama** — ChromaDB + DuckDuckGo web entegrasyonu
-• **Real-time Streaming** — SSE ile cümle bazlı akış
-• **Full-Stack** — FastAPI + Next.js 15 + Tailwind CSS
+> *mizan (Arapça)* — terazi, denge, ölçü ⚖️
 
-**🎯 Neden Bu Projeyi Yaptım?**
+Yapay zeka destekli bir platform geliştirdim. Doğal dille soru soruyorsunuz, sistem partilerin **resmi belgelerinden** yanıt veriyor. Her bilginin kaynağı gösteriliyor.
 
-1. Domain-specific RAG sistemlerinde uzmanlığımı göstermek
-2. Multi-agent orkestrasyonu pratik bir uygulamada sergilemek
-3. End-to-end AI ürün geliştirme sürecini deneyimlemek
+**Örnek sorular:**
+- "AKP ile CHP'nin ekonomi politikaları nasıl farklılaşıyor?"
+- "Hangi parti asgari ücreti artırmayı vadediyor?"
+- "MHP'nin göç politikası nedir?"
 
-**🔗 Link:**
-GitHub: github.com/barancanercan/mizan-ai
+**🔧 Teknik altyapı:**
+• Multi-Agent RAG mimarisi (LangGraph)
+• Türkçe embedding modeli (BGE-M3)
+• Real-time streaming (SSE)
+• Full-stack: FastAPI + Next.js 15
 
-Bu projeyle ilgili sorularınızı yorumlarda bekliyorum! 👇
-
-#AI #MachineLearning #RAG #LangChain #LangGraph #NLP #Python #NextJS #FastAPI #OpenSource #TurkishAI #YapayZeka
-
----
-
-## Alternatif Post (Daha Kısa)
-
----
-
-🚀 Yeni projem **MizanAI**'ı duyurmaktan heyecan duyuyorum!
-
-8 Türk siyasi partisinin belgelerini analiz eden AI-powered bir platform:
-
-✅ Multi-agent mimarisi (LangGraph)
-✅ Domain-specific RAG sistemi
-✅ Türkçe embeddings (BGE-M3)
-✅ Real-time streaming (SSE)
-✅ Full-stack: FastAPI + Next.js 15
-
-*"mizan"* — Arapça'da terazi, denge anlamına gelir ⚖️
+**🎯 Misyon:**
+Siyasi bilgiye erişimi demokratikleştirmek. Vatandaşların kararlarını tarafsız, doğrulanabilir bilgiye dayanarak vermesini sağlamak.
 
 🔗 github.com/barancanercan/mizan-ai
 
-#AI #RAG #LangChain #Python #MachineLearning #YapayZeka
+Açık kaynak. Herkes katkıda bulunabilir.
+
+#AI #MachineLearning #RAG #OpenSource #Türkiye #YapayZeka #Demokrasi #SiyasiBilgi
+
+---
+
+## Kısa Versiyon
+
+---
+
+🗳️ Türkiye'de 8 siyasi parti var. Kaçının programını okudunuz?
+
+**Problem:** Siyasi bilgi dağınık, erişimi zor, kaynaklar yanlı.
+
+**Çözüm:** MizanAI — Yapay zeka ile parti belgelerini sorgulayın.
+
+> "CHP'nin ekonomi politikası nedir?"
+> → Parti programından kaynaklı, doğrulanabilir yanıt.
+
+*mizan* — Arapça'da terazi, denge demek ⚖️
+
+Açık kaynak: github.com/barancanercan/mizan-ai
+
+#AI #RAG #OpenSource #YapayZeka #Türkiye
 
 ---
 
@@ -62,73 +65,100 @@ Bu projeyle ilgili sorularınızı yorumlarda bekliyorum! 👇
 
 ---
 
-🚀 **Announcing MizanAI: AI-Powered Political Document Analysis**
+🗳️ **Why is accessing political information so difficult?**
 
-I built Turkey's first AI-powered political document analysis platform!
+In Turkey, there are 8 major political parties. Each has official statutes, programs, and policy documents — hundreds of pages that almost nobody reads.
 
-**What is MizanAI?**
-> *mizan (Arabic)* — scale, balance, measure
+**The Problem:**
+- Information is scattered across websites
+- News sources are often biased
+- Official documents use complex legal language
+- No easy way to compare party positions
 
-A RAG platform that analyzes statutes, programs, and official documents of 8 Turkish political parties.
+**The Solution:** MizanAI
 
-**🔧 Technical Highlights:**
+> *mizan (Arabic)* — scale, balance, measure ⚖️
 
-• **Multi-Agent Architecture** — LangGraph-orchestrated agents
-• **Domain-Specific RAG** — Turkish BGE-M3 embeddings
-• **Hybrid Search** — ChromaDB + DuckDuckGo integration
-• **Real-time Streaming** — Sentence-level SSE
-• **Full-Stack** — FastAPI + Next.js 15 + Tailwind CSS
+I built an AI-powered platform that lets you query official party documents in natural language. Every answer is sourced and verifiable.
 
-**🎯 Why I Built This:**
+**Example queries:**
+- "How do AKP and CHP differ on economic policy?"
+- "Which party promises to raise minimum wage?"
+- "What is MHP's immigration policy?"
 
-1. Demonstrate expertise in domain-specific RAG systems
-2. Showcase multi-agent orchestration in production
-3. Experience end-to-end AI product development
+**🔧 Tech Stack:**
+• Multi-Agent RAG (LangGraph)
+• Turkish embeddings (BGE-M3)
+• Real-time streaming (SSE)
+• FastAPI + Next.js 15
 
-🔗 GitHub: github.com/barancanercan/mizan-ai
+**🎯 Mission:**
+Democratize access to political information. Help citizens make informed decisions based on verified, unbiased sources.
 
-Questions welcome in the comments! 👇
+🔗 github.com/barancanercan/mizan-ai
 
-#AI #MachineLearning #RAG #LangChain #LangGraph #NLP #Python #NextJS #OpenSource
+Open source. Contributions welcome.
+
+#AI #MachineLearning #RAG #OpenSource #Democracy #NLP #LangChain
 
 ---
 
 ## Paylaşım Stratejisi
 
+### Ana Mesaj
+> "Siyasi bilgiye erişimi demokratikleştirmek"
+
+### Hook (Dikkat Çekici Açılış)
+- Soru ile başla: "Kaç partinin programını okudunuz?"
+- Problem tanımla: Bilgi erişim zorluğu
+- Çözümü sun: MizanAI
+
 ### Zamanlama
 - **En iyi günler:** Salı, Çarşamba, Perşembe
 - **En iyi saatler:** 09:00-11:00 veya 14:00-16:00 (Türkiye saati)
+- **Seçim dönemlerinde:** Daha fazla ilgi çeker
 
 ### Etkileşim Artırma
-1. İlk 1 saat içinde gelen yorumlara hızlı yanıt ver
-2. Teknik sorulara detaylı cevap ver
-3. İlgili kişileri mention et (AI community'den tanıdıkların)
+1. İlk 1 saat içinde yorumlara hızlı yanıt ver
+2. "Hangi soruyu sormak isterdiniz?" diye sor
+3. Teknik sorulara detaylı cevap ver
 
 ### Takip Postları
-1. **Hafta 2:** "MizanAI'ın arkasındaki mimari: Multi-agent sistemler nasıl çalışır?"
-2. **Hafta 3:** "RAG sistemlerinde Türkçe için embedding seçimi"
-3. **Hafta 4:** "Production-ready AI uygulaması geliştirmenin zorlukları"
+1. **Hafta 2:** "Seçim öncesi: Partilerin vaatlerini nasıl karşılaştırırsınız?"
+2. **Hafta 3:** "RAG sistemleri ile doğrulanabilir AI nasıl çalışır?"
+3. **Hafta 4:** "Açık kaynak ve demokrasi: Neden önemli?"
 
 ### Hashtag Stratejisi
-- Ana: #AI #MachineLearning #RAG #LangChain
-- Türkçe: #YapayZeka #Türkiye
-- Niche: #LangGraph #MultiAgent #NLP
+**Zorunlu:** #AI #OpenSource #Türkiye
+**Teknik:** #RAG #LangChain #MachineLearning
+**Sosyal:** #Demokrasi #SiyasiBilgi #YapayZeka
 
 ---
 
 ## Görseller
 
-1. **Ana görsel:** Logo (logo.png)
-2. **Demo GIF:** sample.gif (repo'da mevcut)
-3. **Mimari diyagramı:** README'deki mermaid diyagramı
+1. **Ana görsel:** Logo + "Siyasi bilgiye erişimi demokratikleştiriyoruz" tagline
+2. **Demo GIF:** sample.gif — Gerçek soru-cevap akışı
+3. **Infografik:** Problem → Çözüm akışı
 
 ---
 
-## Paylaşım Öncesi Kontrol Listesi
+## Anahtar Mesajlar
+
+| Kitle | Mesaj |
+|-------|-------|
+| **Genel** | Siyasi bilgiye erişim artık kolay |
+| **Teknik** | Production-ready RAG sistemi |
+| **Sosyal** | Bilgi demokrasisi, şeffaflık |
+| **Kariyer** | AI/ML uzmanlığı demonstrasyonu |
+
+---
+
+## Paylaşım Öncesi Kontrol
 
 - [x] GitHub repo public
-- [x] README güncel (proje yapısı, linkler)
+- [x] README güncel
 - [x] Demo GIF eklendi (sample.gif)
 - [x] Logo hazır (logo.png)
-- [ ] LinkedIn profil fotoğrafı profesyonel mi?
-- [ ] Profilde AI/ML anahtar kelimeleri var mı?
+- [ ] LinkedIn profil güncel mi?
+- [ ] AI/ML anahtar kelimeleri profilde var mı?
