@@ -267,7 +267,7 @@ curl -X POST http://localhost:8000/api/v1/query/stream \
 | CHP | Cumhuriyet Halk Partisi | Özgür Özel |
 | MHP | Milliyetçi Hareket Partisi | Devlet Bahçeli |
 | İYİ | İYİ Parti | Müsavat Dervişoğlu |
-| DEM | Halkların Eşitlik ve Demokrasi Partisi | Tuncer Bakırhan |
+| DEM | Halkların Eşitlik ve Demokrasi Partisi | Tülay Hatimoğulları, Tuncer Bakırhan (Eş Genel Başkanlar) |
 | SP | Saadet Partisi | Temel Karamollaoğlu |
 | ZP | Zafer Partisi | Ümit Özdağ |
 | BBP | Büyük Birlik Partisi | Mustafa Destici |
