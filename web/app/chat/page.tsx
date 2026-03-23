@@ -39,10 +39,10 @@ interface Chat {
 const generateUniqueId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 const QUICK_QUESTIONS = [
-  'CHP ekonomi politikası',
-  'AKP eğitim programı',
-  'MHP dış politika',
-  'Partileri karşılaştır',
+  'AKP ve CHP arasındaki farklar nelerdir?',
+  'Hangi parti asgari ücreti en çok artırmayı vadediyor?',
+  'MHP ile İYİ Parti neden ayrıldı?',
+  'Partilerin ekonomi politikalarını karşılaştır',
 ];
 
 export default function ChatPage() {
