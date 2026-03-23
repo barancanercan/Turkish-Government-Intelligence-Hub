@@ -9,15 +9,17 @@
 Türkiye'nin ilk yapay zeka destekli siyasi belge analiz platformunu geliştirdim!
 
 **MizanAI Nedir?**
-8 siyasi partinin (AKP, CHP, MHP, İYİ, DEM, SP, ZP, BBP) tüzük, program ve resmi belgelerini yapay zeka ile analiz eden bir RAG (Retrieval-Augmented Generation) platformu.
+> *mizan (Arapça)* — terazi, denge, ölçü
+
+8 siyasi partinin (AKP, CHP, MHP, İYİ, DEM, SP, ZP, BBP) tüzük, program ve resmi belgelerini yapay zeka ile analiz eden bir RAG platformu.
 
 **🔧 Teknik Özellikler:**
 
-• **Multi-Agent Mimarisi** - LangGraph ile koordineli çalışan Supervisor, Researcher, Analyst ve Writer ajanları
-• **Domain-Specific RAG** - Türkçe BGE-M3 embeddings ile optimize edilmiş vektör araması
-• **Hibrit Arama** - ChromaDB + DuckDuckGo web araması entegrasyonu
-• **Real-time Streaming** - SSE ile cümle bazlı akış
-• **Production-Ready** - FastAPI + Next.js 15, JWT auth, retry logic
+• **Multi-Agent Mimarisi** — LangGraph ile koordineli çalışan ajanlar
+• **Domain-Specific RAG** — Türkçe BGE-M3 embeddings ile vektör araması
+• **Hibrit Arama** — ChromaDB + DuckDuckGo web entegrasyonu
+• **Real-time Streaming** — SSE ile cümle bazlı akış
+• **Full-Stack** — FastAPI + Next.js 15 + Tailwind CSS
 
 **🎯 Neden Bu Projeyi Yaptım?**
 
@@ -25,14 +27,12 @@ Türkiye'nin ilk yapay zeka destekli siyasi belge analiz platformunu geliştirdi
 2. Multi-agent orkestrasyonu pratik bir uygulamada sergilemek
 3. End-to-end AI ürün geliştirme sürecini deneyimlemek
 
-**🔗 Linkler:**
-• Demo: [mizanai.vercel.app]
-• GitHub: github.com/barancanercan/mizan-ai
-• Detaylı Teknik Blog: [yakında]
+**🔗 Link:**
+GitHub: github.com/barancanercan/mizan-ai
 
 Bu projeyle ilgili sorularınızı yorumlarda bekliyorum! 👇
 
-#AI #MachineLearning #RAG #LangChain #LangGraph #NLP #Python #NextJS #FastAPI #OpenSource #TurkishAI
+#AI #MachineLearning #RAG #LangChain #LangGraph #NLP #Python #NextJS #FastAPI #OpenSource #TurkishAI #YapayZeka
 
 ---
 
@@ -40,7 +40,7 @@ Bu projeyle ilgili sorularınızı yorumlarda bekliyorum! 👇
 
 ---
 
-🚀 Yeni projem MizanAI'ı duyurmaktan heyecan duyuyorum!
+🚀 Yeni projem **MizanAI**'ı duyurmaktan heyecan duyuyorum!
 
 8 Türk siyasi partisinin belgelerini analiz eden AI-powered bir platform:
 
@@ -50,11 +50,11 @@ Bu projeyle ilgili sorularınızı yorumlarda bekliyorum! 👇
 ✅ Real-time streaming (SSE)
 ✅ Full-stack: FastAPI + Next.js 15
 
-Bu proje, RAG sistemleri ve multi-agent orkestrasyonu konusundaki uzmanlığımı sergilemek için geliştirildi.
+*"mizan"* — Arapça'da terazi, denge anlamına gelir ⚖️
 
 🔗 github.com/barancanercan/mizan-ai
 
-#AI #RAG #LangChain #Python #MachineLearning
+#AI #RAG #LangChain #Python #MachineLearning #YapayZeka
 
 ---
 
@@ -67,20 +67,22 @@ Bu proje, RAG sistemleri ve multi-agent orkestrasyonu konusundaki uzmanlığım�
 I built Turkey's first AI-powered political document analysis platform!
 
 **What is MizanAI?**
-A RAG (Retrieval-Augmented Generation) platform that analyzes statutes, programs, and official documents of 8 Turkish political parties.
+> *mizan (Arabic)* — scale, balance, measure
+
+A RAG platform that analyzes statutes, programs, and official documents of 8 Turkish political parties.
 
 **🔧 Technical Highlights:**
 
-• **Multi-Agent Architecture** - LangGraph-orchestrated Supervisor, Researcher, Analyst, and Writer agents
-• **Domain-Specific RAG** - Optimized vector search with Turkish BGE-M3 embeddings
-• **Hybrid Search** - ChromaDB + DuckDuckGo web search integration
-• **Real-time Streaming** - Sentence-level SSE streaming
-• **Production-Ready** - FastAPI + Next.js 15, JWT auth, retry logic
+• **Multi-Agent Architecture** — LangGraph-orchestrated agents
+• **Domain-Specific RAG** — Turkish BGE-M3 embeddings
+• **Hybrid Search** — ChromaDB + DuckDuckGo integration
+• **Real-time Streaming** — Sentence-level SSE
+• **Full-Stack** — FastAPI + Next.js 15 + Tailwind CSS
 
 **🎯 Why I Built This:**
 
 1. Demonstrate expertise in domain-specific RAG systems
-2. Showcase multi-agent orchestration in a practical application
+2. Showcase multi-agent orchestration in production
 3. Experience end-to-end AI product development
 
 🔗 GitHub: github.com/barancanercan/mizan-ai
@@ -108,25 +110,25 @@ Questions welcome in the comments! 👇
 3. **Hafta 4:** "Production-ready AI uygulaması geliştirmenin zorlukları"
 
 ### Hashtag Stratejisi
-- Ana hashtagler: #AI #MachineLearning #RAG #LangChain
-- Türkçe hashtagler: #YapayZeka #Türkiye
-- Niche hashtagler: #LangGraph #MultiAgent #NLP
+- Ana: #AI #MachineLearning #RAG #LangChain
+- Türkçe: #YapayZeka #Türkiye
+- Niche: #LangGraph #MultiAgent #NLP
 
 ---
 
-## Görseller için Öneriler
+## Görseller
 
-1. **Ana görsel:** Proje logosu + ekran görüntüsü kombinasyonu
-2. **Mimari diyagramı:** README'deki mermaid diyagramını görsel olarak hazırla
-3. **Demo GIF:** Chat akışını gösteren 15-20 saniyelik GIF
+1. **Ana görsel:** Logo (logo.png)
+2. **Demo GIF:** sample.gif (repo'da mevcut)
+3. **Mimari diyagramı:** README'deki mermaid diyagramı
 
 ---
 
-## Bağlantı Kontrol Listesi
+## Paylaşım Öncesi Kontrol Listesi
 
-Paylaşmadan önce kontrol et:
-- [ ] GitHub repo public mı?
-- [ ] README güncel mi?
-- [ ] Demo linki çalışıyor mu?
+- [x] GitHub repo public
+- [x] README güncel (proje yapısı, linkler)
+- [x] Demo GIF eklendi (sample.gif)
+- [x] Logo hazır (logo.png)
 - [ ] LinkedIn profil fotoğrafı profesyonel mi?
 - [ ] Profilde AI/ML anahtar kelimeleri var mı?
