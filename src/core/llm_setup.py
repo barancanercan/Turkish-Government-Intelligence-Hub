@@ -213,7 +213,7 @@ class LLMManager:
             temperature=config.LLM_TEMPERATURE,
             base_url=base_url,
             repeat_penalty=1.2,
-            num_predict=512,
+            num_predict=2048,
         )
 
         return prompt_template | llm | StrOutputParser()
@@ -318,7 +318,7 @@ def get_ollama_model(model_type: str = "main") -> OllamaLLM:
         temperature=config.LLM_TEMPERATURE,
         base_url=ollama_base_url,
         repeat_penalty=1.2,
-        num_predict=512,
+        num_predict=2048,
     )
 
 

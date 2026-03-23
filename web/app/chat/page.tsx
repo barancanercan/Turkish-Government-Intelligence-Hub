@@ -626,20 +626,21 @@ export default function ChatPage() {
                             : 'bg-card border border-border text-foreground rounded-tl-md'
                         }`}
                       >
-                        <div className="break-words prose prose-invert prose-sm max-w-none">
+                        <div className={`break-words max-w-none ${message.role === 'assistant' ? 'prose prose-invert prose-sm' : ''}`}>
                           <ReactMarkdown
                             components={{
-                              p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                              ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
-                              ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
-                              li: ({ children }) => <li className="text-inherit">{children}</li>,
-                              strong: ({ children }) => <strong className="font-bold text-inherit">{children}</strong>,
-                              em: ({ children }) => <em className="italic">{children}</em>,
-                              h1: ({ children }) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
-                              h2: ({ children }) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
-                              h3: ({ children }) => <h3 className="text-base font-bold mb-1">{children}</h3>,
-                              code: ({ children }) => <code className="bg-muted px-1.5 py-0.5 rounded text-sm">{children}</code>,
-                              blockquote: ({ children }) => <blockquote className="border-l-4 border-primary/50 pl-3 italic text-muted-foreground">{children}</blockquote>,
+                              p: ({ children }) => <p className="mb-3 last:mb-0 leading-relaxed">{children}</p>,
+                              ul: ({ children }) => <ul className="list-disc ml-4 mb-3 space-y-1.5">{children}</ul>,
+                              ol: ({ children }) => <ol className="list-decimal ml-4 mb-3 space-y-1.5">{children}</ol>,
+                              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                              strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                              em: ({ children }) => <em className="italic text-gray-300">{children}</em>,
+                              h1: ({ children }) => <h1 className="text-xl font-bold mb-3 mt-4 first:mt-0 text-white border-b border-white/10 pb-2">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-lg font-bold mb-2 mt-4 first:mt-0 text-white">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-base font-semibold mb-2 mt-3 first:mt-0 text-blue-300">{children}</h3>,
+                              code: ({ children }) => <code className="bg-black/30 px-1.5 py-0.5 rounded text-sm text-green-300 font-mono">{children}</code>,
+                              blockquote: ({ children }) => <blockquote className="border-l-4 border-primary pl-4 my-3 italic text-gray-300 bg-black/20 py-2 rounded-r">{children}</blockquote>,
+                              hr: () => <hr className="my-4 border-white/10" />,
                             }}
                           >
                             {message.content}
