@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Brain, FileText, MessageSquare, Sparkles, Users, ArrowRight, Scale } from "lucide-react";
+import { Brain, FileText, MessageSquare, Sparkles, Users, ArrowRight, Scale, Search, Zap, Shield, BookOpen } from "lucide-react";
 import { Navbar } from "@/components";
 import { Footer } from "@/components";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -22,28 +22,43 @@ const PARTIES = [
 
 const FEATURES = [
   {
-    icon: Brain,
-    title: "Multi-Agent Sistem",
-    description: "LangGraph ile güçlendirilmiş akıllı ajanlar, karmaşık siyasi soruları analiz etmek için koordineli çalışır.",
+    icon: Search,
+    title: "Anında Cevap",
+    description: "\"AKP'nin ekonomi politikası nedir?\" gibi sorulara saniyeler içinde, kaynaklı yanıtlar alın.",
     color: "blue",
   },
   {
-    icon: Users,
-    title: "8 Siyasi Parti",
-    description: "Tüm partilerin tüzük, program ve resmi belgelerinin tam veritabanında arama yapın.",
+    icon: Scale,
+    title: "Parti Karşılaştırma",
+    description: "\"CHP ile MHP'nin eğitim politikalarını karşılaştır\" deyin, detaylı analiz alın.",
     color: "purple",
   },
   {
     icon: FileText,
-    title: "Kaynak Gösterimli",
-    description: "Her yanıta doğrulanabilir kaynaklar eşlik eder. Bilginin nereden geldiğini her zaman görün.",
+    title: "Belge Analizi",
+    description: "Parti tüzükleri, seçim beyannameleri ve programlardan doğrudan alıntılarla yanıt.",
     color: "green",
   },
   {
-    icon: Scale,
-    title: "Tarafsız Analiz",
-    description: "Objectif ve dengeli karşılaştırmalar ile partilerin pozisyonlarını yanlışsız değerlendirin.",
+    icon: Shield,
+    title: "Doğrulanabilir Bilgi",
+    description: "Her bilginin kaynağı gösterilir. Manipülasyona karşı şeffaf ve güvenilir.",
     color: "orange",
+  },
+];
+
+const USE_CASES = [
+  {
+    question: "Hangi parti asgari ücreti artırmayı vadediyor?",
+    answer: "Partilerin ekonomi programlarını tarayarak karşılaştırmalı tablo sunar.",
+  },
+  {
+    question: "AKP ile CHP'nin dış politika farkları neler?",
+    answer: "Her iki partinin resmi belgelerinden alıntılarla analiz yapar.",
+  },
+  {
+    question: "MHP'nin göç politikası nedir?",
+    answer: "Parti programından ilgili maddeleri bulup özetler.",
   },
 ];
 
@@ -110,7 +125,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6"
+                  className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-4"
                 >
                   <span className="relative">
                     <span className="absolute inset-0 blur-2xl bg-gradient-to-r from-primary via-purple-500 to-blue-500 opacity-30 rounded-lg" />
@@ -126,8 +141,21 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.25 }}
-                  className="flex justify-center mb-4"
+                  className="flex flex-col items-center gap-3 mb-6"
                 >
+                  {/* Dictionary Meaning */}
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-xl">
+                    <BookOpen className="w-4 h-4 text-primary" />
+                    <span className="text-sm text-gray-300">
+                      <span className="text-primary font-medium">mizan</span>
+                      <span className="text-gray-500 mx-2">|</span>
+                      <span className="italic">isim, Arapça</span>
+                      <span className="text-gray-500 mx-2">•</span>
+                      <span>terazi, denge, ölçü</span>
+                    </span>
+                  </div>
+
+                  {/* GitHub Badge */}
                   <a
                     href="https://github.com/barancanercan/mizan-ai"
                     target="_blank"
@@ -145,7 +173,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
-                  className="text-xl sm:text-2xl text-gray-300 mb-6 max-w-3xl mx-auto leading-relaxed"
+                  className="text-xl sm:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto leading-relaxed"
                 >
                   Türkiye'nin yapay zeka destekli siyasi belge analiz platformu
                 </motion.p>
@@ -158,8 +186,8 @@ export default function Home() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   className="text-gray-400 mb-10 max-w-2xl mx-auto text-lg"
                 >
-                  Multi-agent sistemimiz ile siyasi partilerin tüzük, program ve belgelerini analiz edin.
-                  Doğrulanabilir kaynaklar ile güvenilir bilgi alın.
+                  8 siyasi partinin tüzük ve programlarını sorgulayın, karşılaştırın.
+                  Her yanıt kaynak gösterimli, her bilgi doğrulanabilir.
                 </motion.p>
               </StaggerItem>
 
@@ -259,6 +287,50 @@ export default function Home() {
                 </StaggerItem>
               ))}
             </StaggerContainer>
+          </div>
+        </section>
+
+        {/* Use Cases Section */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          </div>
+
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl sm:text-5xl font-bold mb-4">Ne Sorabilirsiniz?</h2>
+              <p className="text-gray-400 text-lg">Gerçek kullanım senaryoları</p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {USE_CASES.map((useCase, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="relative p-6 rounded-2xl border border-border bg-card/30 hover:bg-card/50 transition-all group"
+                >
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                      <MessageSquare className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-white font-medium leading-relaxed">"{useCase.question}"</p>
+                  </div>
+                  <div className="flex items-start gap-3 pl-11">
+                    <Zap className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-gray-400 text-sm">{useCase.answer}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 

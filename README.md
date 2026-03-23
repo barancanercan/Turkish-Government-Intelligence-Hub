@@ -3,6 +3,8 @@
 
   # MizanAI
 
+  > **mizan** *(isim, Arapça)* — terazi, denge, ölçü
+
   **Türkiye'nin İlk Yapay Zeka Destekli Siyasi Belge Analiz Platformu**
 </div>
 
@@ -22,6 +24,15 @@
 MizanAI, Türkiye'deki 8 siyasi partinin (AKP, CHP, MHP, İYİ Parti, DEM, Saadet Partisi, Zafer Partisi, BBP) tüzük, program ve resmi belgelerini analiz eden, yapay zeka destekli bir belge sorgulama platformudur.
 
 Kullanıcılar doğal dil ile sorular sorabilir, partilerin politikalarını karşılaştırabilir ve her yanıtın hangi kaynaktan geldiğini doğrulayabilir.
+
+### 🎯 Ne İşe Yarar?
+
+| Soru Tipi | Örnek | MizanAI Ne Yapar? |
+|-----------|-------|-------------------|
+| **Politika Sorgulama** | "AKP'nin ekonomi politikası nedir?" | Parti programından ilgili bölümleri bulur ve özetler |
+| **Parti Karşılaştırma** | "CHP ile MHP'nin eğitim politikalarını karşılaştır" | Her iki partinin belgelerinden karşılaştırmalı analiz sunar |
+| **Vaat Araştırma** | "Hangi parti asgari ücreti artırmayı vadediyor?" | Tüm parti programlarını tarar, karşılaştırmalı tablo oluşturur |
+| **Kaynak Doğrulama** | "MHP'nin göç politikası nedir?" | Resmi belgeden alıntılarla yanıt verir, kaynak gösterir |
 
 ---
 
