@@ -48,7 +48,7 @@ export function Navbar() {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
                 <Image
-                  src="/logo.png"
+                  src="/logo.jpg"
                   alt="MizanAI"
                   width={40}
                   height={40}
