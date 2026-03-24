@@ -1,7 +1,8 @@
 """Core module tests."""
 
 import pytest
-from src.core.parties import normalize_party_name, PARTY_INFO
+from src.core.parties import normalize_party_name
+from src.config import PARTY_INFO
 from src.core.content_filter import should_answer
 
 
@@ -9,8 +10,9 @@ def test_normalize_party_name():
     """Test party name normalization."""
     assert normalize_party_name("chp") == "CHP"
     assert normalize_party_name("AKP") == "AKP"
-    assert normalize_party_name("iyi") == "IYI"
-    assert normalize_party_name("İYİ") == "IYI"
+    assert normalize_party_name("iyi") == "İYİ"  # Turkish İ normalization
+    assert normalize_party_name("İYİ") == "İYİ"
+    assert normalize_party_name("IYI") == "İYİ"
 
 
 def test_party_info_exists():
